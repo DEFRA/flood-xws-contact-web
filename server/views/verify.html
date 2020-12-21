@@ -1,0 +1,34 @@
+{% extends "form.html" %}
+
+{% block form %}
+{{
+  govukInput({
+    id: "token",
+    name: "token",
+    label: {
+      text: "Enter your code",
+      classes: "govuk-label--l",
+      isPageHeading: true
+    },
+    hint: {
+      html: "
+        We have sent a 6 digit code to " + data.raw + " by " + data.deliveryMethod + ".<br>
+        It can take up to 5 minutes for your code to arrive.
+      "
+    },
+    classes: "govuk-input--width-5",
+    attributes: {
+      autocomplete: "off",
+      spellcheck: "false",
+      inputmode: "numeric",
+      pattern: "[0-9]*"
+    },
+    value: data.token,
+    errorMessage: errors.token
+  }) 
+}}
+{% endblock %}
+
+{% block afterForm %}
+{% include "partials/floodline.html" %}
+{% endblock %}

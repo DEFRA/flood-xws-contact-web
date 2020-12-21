@@ -1,0 +1,21 @@
+{% extends "two-thirds.html" %}
+
+{% block twoThirds %}
+<span class="govuk-caption-l">{{ contact }}</span>
+<h1 class="govuk-heading-l">Your information</h1>
+<p>
+  You can remove the locations below if you are no longer interested
+  in getting flood warning information for that location.
+</p>
+{{ govukTable({
+  firstCellIsHeader: false,
+  head: [
+    { text: "Location" },
+    { text: "Action" }
+  ],
+  rows: rows
+}) }}
+
+<a class="govuk-button" href="/find-location">Add location</a>
+<a class="govuk-button" href="/logout">Sign out</a>
+{% endblock %}

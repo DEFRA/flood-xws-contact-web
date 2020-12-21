@@ -1,0 +1,22 @@
+{% extends "form.html" %}
+
+{% block beforeForm %}
+  <h1 class="govuk-heading-l">Are you sure?</h1>
+  {{ govukWarningText({
+    text: "You will no longer receive flood warning information for " + name,
+    iconFallbackText: "Warning"
+  }) }}
+{% endblock %}
+
+{% block form %}
+  <input type="hidden" name="confirm" value="true" />
+  <input type="hidden" name="name" value="{{name}}" />
+  <input type="hidden" name="locationId" value="{{locationId}}" />
+  {{ 
+    govukButton({
+      text: "Cancel",
+      href: "/contact",
+      classes: "govuk-button--secondary"
+    }) 
+  }}
+{% endblock %}
