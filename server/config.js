@@ -48,6 +48,10 @@ const schema = joi.object().keys({
   db: joi.string().required()
 })
 
+// Check for cloud foundry DATABASE_URL and append SSL
+const cfDatabaseUrl = process.env.DATABASE_URL &&
+  `${process.env.DATABASE_URL}?ssl=true`
+
 const config = {
   env: process.env.ENV,
   host: process.env.HOST,
@@ -77,7 +81,6 @@ const config = {
     enabled: process.env.REDIS_CACHE_ENABLED
   },
   httpTimeoutMs: process.env.HTTP_TIMEOUT_MS,
-  db: process.env.DB,
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,
     templates: {
@@ -89,7 +92,8 @@ const config = {
     accountId: process.env.TWILIO_ACCOUNT_ID,
     authToken: process.env.TWILIO_AUTH_TOKEN,
     fromPhoneNumber: process.env.TWILIO_FROM_PHONE_NUMBER
-  }
+  },
+  db: cfDatabaseUrl || process.env.DB
 }
 
 const { error, value } = schema.validate(config)
