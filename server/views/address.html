@@ -1,0 +1,31 @@
+{% extends "form.html" %}
+
+{% set pageTitle = "Select an address" %}
+
+{% block beforeForm %}
+<h1 class="govuk-heading-xl">{{ pageTitle }}</h1>
+{% endblock %}
+
+{% block form %}
+<div class="govuk-form-group">
+  <span class="govuk-label">Postcode</span>
+  <p class="govuk-body">
+    <strong id="postcode" style="text-transform: uppercase;">{{ data.postcode }}</strong>
+    <a href="/find-location" class="govuk-link">Change</a>
+  </p>
+</div>
+
+{{ govukSelect({
+  id: "address",
+  name: "address",
+  label: {
+    text: "Select an address"
+  },
+  items: items,
+  errorMessage: errors.address
+}) }}
+
+<input type="hidden" name="_form" value="address" />
+<input type="hidden" name="postcode" value="{{ data.postcode }}" />
+<input type="hidden" name="addresses" value="{{ data.addresses | dump }}" />
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "two-thirds.html" %}
+
+{% block twoThirds %}
+<h1 class="govuk-heading-l">We do not send flood warnings for {{data.name}}</h1>
+<p class="govuk-body">This is because the area:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>may be at very low risk of flooding from rivers, the sea or groundwater</li>
+  <li>may be affected by surface water flooding (also known as flash flooding). The service does not send warnings for this type of flooding yet</li>
+  <li>isn't covered by our equipment or forecasting</li>
+</ul>
+
+{{ govukButton({
+  text: "Try another location",
+  href: "/find-location"
+}) }}
+{% endblock %}

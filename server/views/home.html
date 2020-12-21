@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Get flood warnings</h1>
+    <p>Use this service to:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>sign up to receive free flood warning information in England by text message, email or automated
+        telephone message</li>
+      <li>edit or remove contacts you already have registered. To edit an existing contact, please <a
+        href="/contact-type?signin">sign in</a></li>
+    </ul>
+
+    {{
+      govukButton({
+        text: "Start now",
+        href: "/contact-type",
+        isStartButton: true
+      })
+    }}
+    <h2 class="govuk-heading-m">Other ways to register</h2>
+    <p>If you’re in England, Scotland or Wales you can also register, update or remove your contacts by calling
+      Floodline.
+    </p>
+    {% include "partials/floodline.html" %}
+    <h2 class="govuk-heading-m">Warnings for organisations with more than one location</h2>
+    <p>If you’re in England or Wales, you can register for warnings for more than one location, for example if your
+      organisation has many sites, or you are interested in a large geographical area.</p>
+    <p>To register, call the Targeted Flood Warning Service - it is free for not-for-profit organisations, but there may
+      be a charge for other organisations.</p>
+    <div class="govuk-inset-text">
+      <p><strong>Targeted Flood Warning Service</strong><br>
+        Telephone: 03708 506 506<br>
+        Monday to Friday, 8am to 6pm<br>
+        <a href="https://www.gov.uk/call-charges">Find out about call charges</a></p>
+    </div>
+    <p>If you are already registered to the Targeted Flood Warning Service, you can sign in <a
+        href="https://www.fws.environment-agency.gov.uk/app/olr/fwslogin">here</a>.</p>
+  </div>
+  <div class="govuk-grid-column-one-third">
+    <aside class="app-related-items" role="complementary">
+      <h2 class="govuk-heading-m" id="subsection-title">Related content</h2>
+      <nav aria-labelledby="subsection-title" role="navigation">
+        <ul class="govuk-list govuk-body-s">
+          <li>
+            <a href="https://flood-warning-information.service.gov.uk/warnings">Flood information service</a>
+          </li>
+          <li>
+            <a href="https://flood-warning-information.service.gov.uk/5-day-flood-risk">5-day flood risk for England and
+              Wales</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
+</div>
+{% endblock %}

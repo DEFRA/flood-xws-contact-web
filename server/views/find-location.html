@@ -1,0 +1,25 @@
+{% extends "form.html" %}
+
+{% block form %}
+{{
+  govukInput({
+    id: "location",
+    name: "location",
+    label: {
+      text: "Find a location",
+      classes: "govuk-label--l",
+      isPageHeading: true
+    },
+    hint: {
+      html: "You can register to receive flood warning information for a property or a wider area, such as a village, town or city."
+    },
+    classes: "govuk-input--width-20",
+    attributes: {
+      placeholder: "E.g. Weymouth or SW1A 1AA"
+    },
+    value: data.location,
+    errorMessage: errors.location
+  })
+}}
+<input type="hidden" name="_form" value="location" />
+{% endblock %}
