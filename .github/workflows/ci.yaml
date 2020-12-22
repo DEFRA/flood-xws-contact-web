@@ -21,17 +21,17 @@ jobs:
         HOST: "0.0.0.0"
         ENV: "local"
         COOKIE_PASSWORD: ${{ secrets.COOKIE_PASSWORD }}
-        COOKIE_IS_SECURE: ${{ secrets.COOKIE_IS_SECURE }}
+        COOKIE_IS_SECURE: true
         OS_PLACES_KEY: ${{ secrets.OS_PLACES_KEY }}
         OS_MAPS_KEY: ${{ secrets.OS_MAPS_KEY }}
         OS_NAMES_KEY: ${{ secrets.OS_NAMES_KEY }}
-        VERIFY_REGION: ${{ secrets.VERIFY_REGION }}
+        VERIFY_REGION: eu-west-1
         VERIFY_APPLICATION_ID: ${{ secrets.VERIFY_APPLICATION_ID }}
-        RATE_LIMIT_ENABLED: ${{ secrets.RATE_LIMIT_ENABLED }}
-        RATE_LIMIT_REQUESTS: ${{ secrets.RATE_LIMIT_REQUESTS }}
-        RATE_LIMIT_EXPIRES_IN: ${{ secrets.RATE_LIMIT_EXPIRES_IN }}
+        RATE_LIMIT_ENABLED: true
+        RATE_LIMIT_REQUESTS: 250
+        RATE_LIMIT_EXPIRES_IN: 720
         RATE_LIMIT_WHITELIST: ${{ secrets.RATE_LIMIT_WHITELIST }}
-        REDIS_CACHE_ENABLED: ${{ secrets.REDIS_CACHE_ENABLED }}
+        REDIS_CACHE_ENABLED: false
         HTTP_TIMEOUT_MS: 10000
         DB: ${{ secrets.DB }}
         NOTIFY_API_KEY: ${{ secrets.NOTIFY_API_KEY }}
@@ -40,8 +40,8 @@ jobs:
         TWILIO_ACCOUNT_ID: ${{ secrets.TWILIO_ACCOUNT_ID }}
         TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
         TWILIO_FROM_PHONE_NUMBER: ${{ secrets.TWILIO_FROM_PHONE_NUMBER }}
-        PHASE_BANNER_TAG: ${{ secrets.PHASE_BANNER_TAG }}
-        PHASE_BANNER_HTML: ${{ secrets.PHASE_BANNER_HTML }}
+        PHASE_BANNER_TAG: local 
+        PHASE_BANNER_HTML: "This is a TEST service - you will not issue alerts"
 
   deploy:
     needs: test
