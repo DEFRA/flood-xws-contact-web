@@ -4,6 +4,9 @@ FROM node:12-alpine
 # Need to add git as package.json has some github refs
 RUN apk add --no-cache bash git
 
+# Install wait-on so app start can be delayed until db is initialised
+RUN npm install -g wait-on
+
 WORKDIR /usr/src/app
 RUN chown node:node /usr/src/app
 

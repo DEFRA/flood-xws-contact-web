@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - run: npm install
+    - run: npm run build --if-present
+    - run: npm test
+      env:
+        CI: true
+        PORT: 3000
+        HOST: "0.0.0.0"
+        ENV: "local"
+        COOKIE_PASSWORD: ${{ secrets.COOKIE_PASSWORD }}
+        COOKIE_IS_SECURE: true
+        OS_PLACES_KEY: ${{ secrets.OS_PLACES_KEY }}
+        OS_MAPS_KEY: ${{ secrets.OS_MAPS_KEY }}
+        OS_NAMES_KEY: ${{ secrets.OS_NAMES_KEY }}
+        VERIFY_REGION: eu-west-1
+        VERIFY_APPLICATION_ID: ${{ secrets.VERIFY_APPLICATION_ID }}
+        RATE_LIMIT_ENABLED: true
+        RATE_LIMIT_REQUESTS: 250
+        RATE_LIMIT_EXPIRES_IN: 720
+        RATE_LIMIT_WHITELIST: ${{ secrets.RATE_LIMIT_WHITELIST }}
+        REDIS_CACHE_ENABLED: false
+        HTTP_TIMEOUT_MS: 10000
+        DB: ${{ secrets.DB }}
+        NOTIFY_API_KEY: ${{ secrets.NOTIFY_API_KEY }}
+        NOTIFY_TEMPLATE_SMS_TOKEN: ${{ secrets.NOTIFY_TEMPLATE_SMS_TOKEN }}
+        NOTIFY_TEMPLATE_EMAIL_TOKEN: ${{ secrets.NOTIFY_TEMPLATE_EMAIL_TOKEN }}
+        TWILIO_ACCOUNT_ID: ${{ secrets.TWILIO_ACCOUNT_ID }}
+        TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+        TWILIO_FROM_PHONE_NUMBER: ${{ secrets.TWILIO_FROM_PHONE_NUMBER }}
+        PHASE_BANNER_TAG: local 
+        PHASE_BANNER_HTML: "This is a TEST service - you will not issue alerts"
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - run: npm install
+    - run: npm run build --if-present
+    - uses: citizen-of-planet-earth/cf-cli-action@master
+      with:
+        cf_api: https://api.london.cloud.service.gov.uk
+        cf_username: ${{ secrets.CF_USER }}
+        cf_password: ${{ secrets.CF_PASSWORD }}
+        cf_org: defra-next-warning-system
+        cf_space: sandbox
+        command: push "xws-contact-web"

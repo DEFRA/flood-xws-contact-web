@@ -9,6 +9,7 @@ async function createServer () {
   // Create the hapi server
   const server = hapi.server({
     port: config.port,
+    host: config.host,
     routes: {
       auth: {
         mode: 'required'
