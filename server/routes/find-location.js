@@ -82,6 +82,7 @@ class PlaceModel extends BaseModel {
 
 const locationHandler = async (request, h) => {
   const { location } = request.payload
+
   if (postcodeRegex.test(location)) {
     // The Address service doesn't support NI addresses
     // but all NI postcodes start with BT so redirect to
