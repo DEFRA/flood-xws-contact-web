@@ -33,7 +33,6 @@ jobs:
         RATE_LIMIT_WHITELIST: ${{ secrets.RATE_LIMIT_WHITELIST }}
         REDIS_CACHE_ENABLED: false
         HTTP_TIMEOUT_MS: 10000
-        DB: ${{ secrets.DB }}
         NOTIFY_API_KEY: ${{ secrets.NOTIFY_API_KEY }}
         NOTIFY_TEMPLATE_SMS_TOKEN: ${{ secrets.NOTIFY_TEMPLATE_SMS_TOKEN }}
         NOTIFY_TEMPLATE_EMAIL_TOKEN: ${{ secrets.NOTIFY_TEMPLATE_EMAIL_TOKEN }}
@@ -42,6 +41,8 @@ jobs:
         TWILIO_FROM_PHONE_NUMBER: ${{ secrets.TWILIO_FROM_PHONE_NUMBER }}
         PHASE_BANNER_TAG: local 
         PHASE_BANNER_HTML: "This is a TEST service - you will not issue alerts"
+        DB: ${{ secrets.DB }}
+        BROKER_URL: ${{ secrets.BROKER_URL }}
 
   deploy:
     needs: test
