@@ -42,6 +42,8 @@ jobs:
         TWILIO_FROM_PHONE_NUMBER: ${{ secrets.TWILIO_FROM_PHONE_NUMBER }}
         PHASE_BANNER_TAG: local 
         PHASE_BANNER_HTML: "This is a TEST service - you will not issue alerts"
+        DB: ${{ secrets.DB }}
+        BROKER_URL: ${{ secrets.BROKER_URL }}
 
   deploy:
     needs: test
@@ -62,4 +64,4 @@ jobs:
         cf_password: ${{ secrets.CF_PASSWORD }}
         cf_org: defra-next-warning-system
         cf_space: sandbox
-        command: push "xws-contact-web"
+        command: push "xws-contact-web-sandbox"
