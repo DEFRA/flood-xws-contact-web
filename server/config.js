@@ -45,12 +45,9 @@ const schema = joi.object().keys({
   }).required(),
   phaseBannerTag: joi.string().required(),
   phaseBannerHtml: joi.string().required(),
-  db: joi.string().required()
+  databaseUrl: joi.string().uri().required(),
+  databaseSsl: joi.boolean().default(false)
 })
-
-// Check for cloud foundry DATABASE_URL and append SSL
-const cfDatabaseUrl = process.env.DATABASE_URL &&
-  `${process.env.DATABASE_URL}?ssl=true`
 
 const config = {
   env: process.env.ENV,
@@ -93,7 +90,8 @@ const config = {
     authToken: process.env.TWILIO_AUTH_TOKEN,
     fromPhoneNumber: process.env.TWILIO_FROM_PHONE_NUMBER
   },
-  db: cfDatabaseUrl || process.env.DB
+  databaseUrl: process.env.DATABASE_URL,
+  databaseSsl: process.env.DATABASE_SSL
 }
 
 const { error, value } = schema.validate(config)

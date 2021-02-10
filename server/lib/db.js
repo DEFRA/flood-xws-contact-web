@@ -6,7 +6,8 @@ const config = require('../config')
  * Create pg pool instance and common helpers
  */
 const pool = new Pool({
-  connectionString: config.db
+  connectionString: config.databaseUrl,
+  ssl: config.databaseSsl
 })
 
 const { query, queryOne } = db(pool)

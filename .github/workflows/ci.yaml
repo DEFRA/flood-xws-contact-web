@@ -33,7 +33,7 @@ jobs:
         RATE_LIMIT_WHITELIST: ${{ secrets.RATE_LIMIT_WHITELIST }}
         REDIS_CACHE_ENABLED: false
         HTTP_TIMEOUT_MS: 10000
-        DB: ${{ secrets.DB }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
         NOTIFY_API_KEY: ${{ secrets.NOTIFY_API_KEY }}
         NOTIFY_TEMPLATE_SMS_TOKEN: ${{ secrets.NOTIFY_TEMPLATE_SMS_TOKEN }}
         NOTIFY_TEMPLATE_EMAIL_TOKEN: ${{ secrets.NOTIFY_TEMPLATE_EMAIL_TOKEN }}
