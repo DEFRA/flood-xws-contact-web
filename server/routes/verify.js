@@ -1,6 +1,7 @@
 const joi = require('joi')
 const BaseModel = require('xws-shared/view/model')
 const { getMappedErrors } = require('xws-shared/view/errors')
+const config = require('../config')
 const { verifyTOTP } = require('../lib/otp')
 const { findContact, insertContact } = require('../lib/db')
 
@@ -38,7 +39,7 @@ module.exports = [
 
       // Token can be stored in state in
       // certain environments to aid e2e testing
-      const token = request.yar.get('token')
+      const token = config.isLocal && request.yar.get('token')
 
       const { raw, deliveryMethod } = contact
       return h.view('verify', new Model({ raw, deliveryMethod, token }))
