@@ -83,19 +83,6 @@ Plugins live in the `server/plugins` directory.
 
 The [hapi-pino](https://github.com/pinojs/hapi-pino) plugin is used and configured in `server/plugins/logging`
 
-## Views
-
-The [vison](https://github.com/hapijs/vision) plugin is used for template rendering support.
-
-The template engine used in nunjucks inline with the GDS Design System with support for view caching, layouts, partials and helpers.
-
-## Static files
-
-The [Inert](https://github.com/hapijs/inert) plugin is used for static file and directory handling in hapi.js.
-Put all static assets in `server/public/static`.
-
-Any build output should write to `server/public/build`. This path is in the `.gitignore` and is therefore not checked into source control.
-
 ## Routes
 
 Incoming requests are handled by the server via routes. 
