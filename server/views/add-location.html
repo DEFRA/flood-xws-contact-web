@@ -8,18 +8,36 @@
 {% block beforeForm %}
   <h1 class="govuk-heading-l">Your location</h1>
   <p>{{data.name}}</p>
-
-  {% if not data.hasWarning %}
-    <p>We can't send flood warnings for this location. We can only inform you of minor flooding for this area.<p>
-  {% endif %}
 {% endblock %}
 
 {% block form %}
   <div id="map"></div>
-  {% if data.hasAlerts %}
-    <p>You can also receive optional messages. If you want these messages tick the boxes below.</p>
-  {% endif %}
-
+  {{
+    govukCheckboxes({
+      idPrefix: "fw-areas",
+      name: "fw-areas",
+      classes: "govuk-checkboxes",
+      fieldset: {
+        legend: {
+          text: "Flood warning areas"
+        }
+      },
+      items: data.fwaList
+    })
+  }}
+  {{
+    govukCheckboxes({
+      idPrefix: "fa-areas",
+      name: "fa-areas",
+      classes: "govuk-checkboxes",
+      fieldset: {
+        legend: {
+          text: "Flood alert areas"
+        }
+      },
+      items: data.faaList
+    })
+  }}
   {{
     govukCheckboxes({
       idPrefix: "options",
@@ -39,6 +57,7 @@
     <input type="hidden" name="alerts" value="true" />
   {% endif %}
 {% endblock %}
+
 
 {% block afterForm %}
   {# <pre>{{ data | dump(2) }}</pre> #}

@@ -46,7 +46,14 @@ const schema = joi.object().keys({
   phaseBannerTag: joi.string().required(),
   phaseBannerHtml: joi.string().required(),
   databaseUrl: joi.string().uri().required(),
-  databaseSsl: joi.boolean().default(false)
+  databaseSsl: joi.boolean().default(false),
+  // Note: not a uri as it includes tokens for replacement
+  subscriptionPatchUrl: joi.string().required(),
+  subscriptionPostUrl: joi.string().required(),
+  subscriptionGetUrl: joi.string().required(),
+  subscriptionDeleteUrl: joi.string().required(),
+  contactSubscriptionGetUrl: joi.string().required(),
+  areaUrl: joi.string().uri().required()
 })
 
 const config = {
@@ -91,7 +98,13 @@ const config = {
     fromPhoneNumber: process.env.TWILIO_FROM_PHONE_NUMBER
   },
   databaseUrl: process.env.DATABASE_URL,
-  databaseSsl: process.env.DATABASE_SSL
+  databaseSsl: process.env.DATABASE_SSL,
+  contactSubscriptionGetUrl: process.env.CONTACT_SUBSCRIPTION_GET_URL,
+  subscriptionGetUrl: process.env.SUBSCRIPTION_GET_URL,
+  subscriptionPostUrl: process.env.SUBSCRIPTION_POST_URL,
+  subscriptionPatchUrl: process.env.SUBSCRIPTION_PATCH_URL,
+  subscriptionDeleteUrl: process.env.SUBSCRIPTION_DELETE_URL,
+  areaUrl: process.env.AREA_URL
 }
 
 const { error, value } = schema.validate(config)

@@ -1,15 +1,14 @@
 const joi = require('joi')
 const BaseModel = require('xws-shared/view/model')
 const { getMappedErrors } = require('xws-shared/view/errors')
+
 const {
-  findLocation,
-  insertLocation,
-  insertSubscription,
   findAlertAreasByPoint,
   findWarningAreasByPoint,
   findAlertAreasByBox,
   findWarningAreasByBox
-} = require('../lib/db')
+} = require('../lib/area')
+const { postSubscription } = require('../lib/api')
 const capabilities = require('../lib/capabilities')
 
 const errorMessages = {
@@ -59,16 +58,12 @@ module.exports = [
             text: 'Send a message when flooding is no longer expected.'
           }
         ]
-
-        if (hasWarning) {
-          items.unshift({
-            name: 'alerts',
-            value: true,
-            text: 'Send a message for minor flooding affecting low lying or undefended areas, including roads.'
-          })
+        const mapper = ({ code, name, description, area_type_ref: areaTypeRef }) => {
+          return { value: JSON.stringify({ code, name, areaTypeRef }), text: `${name} (${code})`, hint: { text: description }, id: code }
         }
-
-        return h.view('add-location', new Model({ ...location, fwa, faa, hasAlerts, hasWarning, items }))
+        const faaList = faa.map(mapper)
+        const fwaList = fwa.map(mapper)
+        return h.view('add-location', new Model({ ...location, fwa, faa, hasAlerts, hasWarning, items, faaList, fwaList }))
       } else {
         return h.view('no-target-areas', new Model({ ...location }))
       }
@@ -78,52 +73,29 @@ module.exports = [
     method: 'POST',
     path: '/add-location',
     handler: async (request, h) => {
-      const location = request.yar.get('location')
-
-      if (!location) {
-        return h.redirect('/find-location')
-      }
-
+      const getAreas = (areaType) => (request.payload[areaType] || []).map(area => JSON.parse(area))
+      const { wnlif } = request.payload
+      const faAreas = getAreas('fa-areas')
+      const fwAreas = getAreas('fw-areas')
+      const areas = faAreas.concat(fwAreas)
       const auth = request.auth
-      const { id: ref, name, x, y, xmin, ymin, xmax, ymax } = location
-      const centroid = `{
-        "type": "Point",
-        "coordinates": [${x}, ${y}]
-      }`
-
-      const geom = xmin
-        ? `{
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [${xmin},${ymin}],
-              [${xmin},${ymax}],
-              [${xmax},${ymax}],
-              [${xmax},${ymin}],
-              [${xmin},${ymin}]]
-          ]
-        }`
-        : centroid
-
-      let locationRecord = await findLocation(ref)
-
-      if (!locationRecord) {
-        locationRecord = await insertLocation(ref, name, geom, centroid)
-      }
-
-      const { wnlif, alerts } = request.payload
       const { contactId, contactKind } = auth.credentials
 
       const channelName = getChannelNameFromContactKind(contactKind)
-      await insertSubscription(contactId, locationRecord.id, channelName, wnlif, alerts)
+      await Promise.all(
+        areas.map(async ({ code }) =>
+          await postSubscription(contactId, code, channelName, wnlif)
+        )
+      )
 
       return h.redirect('/contact')
     },
     options: {
       validate: {
         payload: joi.object().keys({
-          wnlif: joi.boolean().default(false).optional(),
-          alerts: joi.boolean().default(false).optional()
+          'fa-areas': joi.array().items(joi.string()).single(),
+          'fw-areas': joi.array().items(joi.string()).single(),
+          wnlif: joi.boolean().default(false).optional()
         }),
         failAction: (request, h, err) => {
           const errors = getMappedErrors(err, errorMessages)

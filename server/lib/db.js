@@ -145,55 +145,6 @@ async function updateSubscription (contactId, subscriptionId, wnlif, alerts) {
  * @param {number} x - The x co-ordinate (Easting/longitude)
  * @param {number} y - The y co-ordinate (Northing/latitude)
  */
-async function findAlertAreasByPoint (x, y) {
-  return query(`
-    select *, st_asgeojson(geom) as geojson
-    from xws_area.area ar
-    where ar.area_type_ref = 'faa' and st_intersects(st_setsrid(st_makepoint($1, $2), 4326), ar.geom);`, [x, y])
-}
-
-/**
- * Find all flood warning areas that intersect a point
- *
- * @param {number} x - The x co-ordinate (Easting/longitude)
- * @param {number} y - The y co-ordinate (Northing/latitude)
- */
-async function findWarningAreasByPoint (x, y) {
-  return query(`
-    select *, st_asgeojson(geom) as geojson
-    from xws_area.area ar
-    where ar.area_type_ref = 'fwa' and st_intersects(st_setsrid(st_makepoint($1, $2), 4326), ar.geom);`, [x, y])
-}
-
-/**
- * Find all flood alert areas that intersect a bounding box
- *
- * @param {number} xmin - The x-min co-ordinate (Easting/longitude)
- * @param {number} ymin - The y-max co-ordinate (Northing/latitude)
- * @param {number} xmax - The x-max co-ordinate (Easting/longitude)
- * @param {number} ymax - The y-max co-ordinate (Northing/latitude)
- */
-async function findAlertAreasByBox (xmin, ymin, xmax, ymax) {
-  return query(`
-    select *, st_asgeojson(geom) as geojson
-    from xws_area.area ar
-    where ar.area_type_ref = 'faa' and st_intersects(st_setsrid(st_makeenvelope($1, $2, $3, $4), 4326), ar.geom);`, [xmin, ymin, xmax, ymax])
-}
-
-/**
- * Find all flood warning areas that intersect a bounding box
- *
- * @param {number} xmin - The x-min co-ordinate (Easting/longitude)
- * @param {number} ymin - The y-max co-ordinate (Northing/latitude)
- * @param {number} xmax - The x-max co-ordinate (Easting/longitude)
- * @param {number} ymax - The y-max co-ordinate (Northing/latitude)
- */
-async function findWarningAreasByBox (xmin, ymin, xmax, ymax) {
-  return query(`
-    select *, st_asgeojson(geom) as geojson
-    from xws_area.area ar
-    where ar.area_type_ref = 'fwa' and st_intersects(st_setsrid(st_makeenvelope($1, $2, $3, $4), 4326), ar.geom);`, [xmin, ymin, xmax, ymax])
-}
 
 module.exports = {
   pool,
@@ -207,9 +158,5 @@ module.exports = {
   getSubscription,
   getSubscriptions,
   removeSubscription,
-  updateSubscription,
-  findAlertAreasByPoint,
-  findWarningAreasByPoint,
-  findAlertAreasByBox,
-  findWarningAreasByBox
+  updateSubscription
 }

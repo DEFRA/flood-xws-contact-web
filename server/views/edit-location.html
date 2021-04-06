@@ -9,8 +9,8 @@
 
 {% block beforeForm %}
 <span class="govuk-caption-l">{{ data.contact }}</span>
-<h1 class="govuk-heading-l">Your location</h1>
-<p>{{data.name}}</p>
+<h1 class="govuk-heading-l">Area</h1>
+<p>{{data.area_name}}</p>
 {% endblock %}
 
 {% block form %}
@@ -27,16 +27,12 @@
   items: data.items
 }) }}
 
-{% if not data.hasWarning %}
-<input type="hidden" name="alerts" value="true" />
-{% endif %}
-
 <!-- <input name="name" type="hidden" value="{{data.name}}" /> -->
 {% endblock %}
 
 {% block afterForm %}
 <form method="post" action="/contact">
-  <input type="hidden" name="locationId" value="{{data.locationId}}" />
+  <input type="hidden" name="locationId" value="{{data.subscriptionId}}" />
   <input type="hidden" name="name" value="{{data.name}}" />
   <button class="govuk-button govuk-button--danger">Remove</button>
 </form>

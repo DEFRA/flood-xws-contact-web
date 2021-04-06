@@ -1,5 +1,5 @@
 const joi = require('joi')
-const { getSubscriptions, removeSubscription } = require('../lib/db')
+const { getSubscriptions, deleteSubscription } = require('../lib/api')
 
 module.exports = [
   {
@@ -8,14 +8,14 @@ module.exports = [
     handler: async (request, h) => {
       const { credentials } = request.auth
       const { contact, contactId } = credentials
-      const locations = await getSubscriptions(contactId)
-      const rows = locations.map(({ id, name, location_id: locationId }) => ([
-        { text: name },
+      const subscriptions = await getSubscriptions(contactId)
+      const rows = subscriptions.map(({ id, area: { name: areaName } }) => ([
+        { text: areaName },
         {
           html: `
             <form method="post">
-              <input type="hidden" name="locationId" value="${locationId}" />
-              <input type="hidden" name="name" value="${name}" />
+              <input type="hidden" name="subscriptionId" value="${id}" />
+              <input type="hidden" name="name" value="${areaName}" />
               <div class="button-container">
                 <a class="govuk-button govuk-button--secondary"
                   href="/edit-location/${id}"
@@ -34,24 +34,21 @@ module.exports = [
     method: 'POST',
     path: '/contact',
     handler: async (request, h) => {
-      const { payload, auth } = request
-      const { locationId, name, confirm } = payload
+      const { payload } = request
+      const { subscriptionId, name, confirm } = payload
 
       if (confirm) {
-        const { credentials } = auth
-        const { contactId } = credentials
-        await removeSubscription(contactId, locationId)
-
+        await deleteSubscription(subscriptionId)
         return h.redirect('/contact')
       } else {
-        return h.view('confirm-remove', { locationId, name })
+        return h.view('confirm-remove', { subscriptionId, name })
       }
     },
     options: {
       validate: {
         payload: joi.object().keys({
           name: joi.string().required(),
-          locationId: joi.string().guid().required(),
+          subscriptionId: joi.string().guid().required(),
           confirm: joi.boolean().optional()
         })
       }

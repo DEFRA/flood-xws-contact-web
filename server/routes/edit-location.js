@@ -1,18 +1,18 @@
 const joi = require('joi')
 const BaseModel = require('xws-shared/view/model')
-const { getSubscription, updateSubscription } = require('../lib/db')
+const { updateSubscription, getSubscription } = require('../lib/api')
 
 module.exports = [
   {
     method: 'GET',
     path: '/edit-location/{id}',
     handler: async (request, h) => {
-      const { id: subscriptionId } = request.params
+      const { id } = request.params
       const { credentials } = request.auth
-      const { contact, contactId } = credentials
-      const location = await getSubscription(contactId, subscriptionId)
+      const { contact } = credentials
+      const subscription = await getSubscription(id)
 
-      const { hasWarning, wnlif, alerts } = location
+      const { wnlif } = subscription
 
       const items = [
         {
@@ -23,16 +23,7 @@ module.exports = [
         }
       ]
 
-      if (hasWarning) {
-        items.unshift({
-          name: 'alerts',
-          value: true,
-          checked: alerts,
-          text: 'Send a message for minor flooding affecting low lying or undefended areas, including roads.'
-        })
-      }
-
-      return h.view('edit-location', new BaseModel({ ...location, contact, hasWarning, items }))
+      return h.view('edit-location', new BaseModel({ ...subscription, contact, items }))
     },
     options: {
       validate: {
@@ -47,19 +38,16 @@ module.exports = [
     path: '/edit-location/{id}',
     handler: async (request, h) => {
       const { id: subscriptionId } = request.params
-      const { wnlif, alerts } = request.payload
-      const { credentials } = request.auth
-      const { contactId } = credentials
+      const { wnlif } = request.payload
 
-      await updateSubscription(contactId, subscriptionId, wnlif, alerts)
+      await updateSubscription(subscriptionId, wnlif)
 
       return h.redirect('/contact')
     },
     options: {
       validate: {
         payload: joi.object().keys({
-          wnlif: joi.boolean().default(false).optional(),
-          alerts: joi.boolean().default(false).optional()
+          wnlif: joi.boolean().default(false).optional()
         }),
         params: joi.object().keys({
           id: joi.string().guid().required()
