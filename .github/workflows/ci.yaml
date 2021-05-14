@@ -42,7 +42,11 @@ jobs:
         PHASE_BANNER_TAG: local 
         PHASE_BANNER_HTML: "This is a TEST service - you will not issue alerts"
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        BROKER_URL: ${{ secrets.BROKER_URL }}
+        SUBSCRIPTION_PATCH_URL: ${{ secrets.SUBSCRIPTION_PATCH_URL }}
+        SUBSCRIPTION_POST_URL: ${{ secrets.SUBSCRIPTION_POST_URL }}
+        SUBSCRIPTION_GET_URL: ${{ secrets.SUBSCRIPTION_GET_URL }}
+        SUBSCRIPTION_DELETE_URL: ${{ secrets.SUBSCRIPTION_DELETE_URL }}
+        CONTACT_SUBSCRIPTION_GET_URL: ${{ secrets.CONTACT_SUBSCRIPTION_GET_URL }}
 
   deploy:
     needs: test
