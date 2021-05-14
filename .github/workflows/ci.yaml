@@ -42,6 +42,7 @@ jobs:
         PHASE_BANNER_TAG: local 
         PHASE_BANNER_HTML: "This is a TEST service - you will not issue alerts"
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        AREA_URL: ${{ secrets.AREA_URL }}
         SUBSCRIPTION_PATCH_URL: ${{ secrets.SUBSCRIPTION_PATCH_URL }}
         SUBSCRIPTION_POST_URL: ${{ secrets.SUBSCRIPTION_POST_URL }}
         SUBSCRIPTION_GET_URL: ${{ secrets.SUBSCRIPTION_GET_URL }}
