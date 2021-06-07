@@ -45,8 +45,6 @@ const schema = joi.object().keys({
   }).required(),
   phaseBannerTag: joi.string().required(),
   phaseBannerHtml: joi.string().required(),
-  databaseUrl: joi.string().uri().required(),
-  databaseSsl: joi.boolean().default(false),
   // Note: not a uri as it includes tokens for replacement
   subscriptionPatchUrl: joi.string().required(),
   subscriptionPostUrl: joi.string().required(),
@@ -99,8 +97,6 @@ const config = {
     authToken: process.env.TWILIO_AUTH_TOKEN,
     fromPhoneNumber: process.env.TWILIO_FROM_PHONE_NUMBER
   },
-  databaseUrl: process.env.DATABASE_URL,
-  databaseSsl: process.env.DATABASE_SSL,
   contactGetUrl: process.env.CONTACT_GET_URL,
   contactPostUrl: process.env.CONTACT_POST_URL,
   contactSubscriptionGetUrl: process.env.CONTACT_SUBSCRIPTION_GET_URL,

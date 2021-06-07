@@ -30,7 +30,6 @@ async function createServer () {
   // Register the plugins
   await server.register(require('@hapi/inert'))
   await server.register(require('@hapi/cookie'))
-  await server.register(require('./plugins/db'))
   await server.register(require('./plugins/auth'))
   await server.register(require('./plugins/session'))
   await server.register(require('./plugins/views'))
