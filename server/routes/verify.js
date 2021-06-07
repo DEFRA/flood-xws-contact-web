@@ -3,7 +3,7 @@ const BaseModel = require('xws-shared/view/model')
 const { getMappedErrors } = require('xws-shared/view/errors')
 const config = require('../config')
 const { verifyTOTP } = require('../lib/otp')
-const { findContact, insertContact } = require('../lib/db')
+const { getContact: findContact, postContact: insertContact } = require('../lib/api')
 
 const errorMessages = {
   token: {
@@ -103,7 +103,7 @@ module.exports = [
 
       request.cookieAuth.set({
         contactId: contactItem.id,
-        contactKind: contactItem.contact_kind_name,
+        contactKind: contactItem.contactKindName,
         contact: value,
         sessionId
       })

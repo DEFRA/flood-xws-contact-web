@@ -1,12 +1,41 @@
 const Wreck = require('@hapi/wreck')
 const interpolate = require('xws-shared/util/interpolate')
 const {
+  contactGetUrl,
+  contactPostUrl,
   subscriptionPatchUrl,
   subscriptionPostUrl,
   subscriptionGetUrl,
   subscriptionDeleteUrl,
   contactSubscriptionGetUrl
 } = require('../config.js')
+
+async function postContact (value, contactKindName) {
+  try {
+    const payload = {
+      value,
+      contactKindName,
+      active: true,
+      contactTypeName: 'public',
+      hazardName: 'flood'
+    }
+    const { res } = await Wreck.post(contactPostUrl, { payload })
+    return res.statusCode
+  } catch (error) {
+    console.log({ contactPostUrl, error })
+  }
+}
+
+async function getContact (value) {
+  try {
+    const url = interpolate(contactGetUrl, { value })
+    const { payload } = await Wreck.get(url)
+    const [contact] = JSON.parse(payload)
+    return contact
+  } catch (error) {
+    console.error({ contactGetUrl, error })
+  }
+}
 
 async function postSubscription (contactId, areaCode, channelName, wnlif) {
   try {
@@ -67,6 +96,8 @@ async function deleteSubscription (subscriptionId) {
 }
 
 module.exports = {
+  getContact,
+  postContact,
   getSubscription,
   getSubscriptions,
   updateSubscription,
