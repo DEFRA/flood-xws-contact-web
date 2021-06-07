@@ -3,7 +3,7 @@ const BaseModel = require('xws-shared/view/model')
 const { getMappedErrors } = require('xws-shared/view/errors')
 const config = require('../config')
 const { verifyTOTP } = require('../lib/otp')
-const { getContact: findContact, postContact: insertContact } = require('../lib/api')
+const { getContact, postContact } = require('../lib/api')
 
 const errorMessages = {
   token: {
@@ -91,10 +91,10 @@ module.exports = [
       // Insert/select contact
       // TODO (ds): transaction
       let existingUser = true
-      let contactItem = await findContact(value)
+      let contactItem = await getContact(value)
 
       if (!contactItem) {
-        contactItem = await insertContact(value, kind)
+        contactItem = await postContact(value, kind)
         existingUser = false
       }
 
