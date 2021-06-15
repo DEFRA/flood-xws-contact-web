@@ -48,6 +48,8 @@ jobs:
         SUBSCRIPTION_GET_URL: ${{ secrets.SUBSCRIPTION_GET_URL }}
         SUBSCRIPTION_DELETE_URL: ${{ secrets.SUBSCRIPTION_DELETE_URL }}
         CONTACT_SUBSCRIPTION_GET_URL: ${{ secrets.CONTACT_SUBSCRIPTION_GET_URL }}
+        CONTACT_GET_URL: ${{ secrets.CONTACT_GET_URL }}
+        CONTACT_POST_URL: ${{ secrets.CONTACT_POST_URL }}
 
   deploy:
     needs: test

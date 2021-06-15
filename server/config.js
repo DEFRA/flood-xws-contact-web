@@ -45,14 +45,14 @@ const schema = joi.object().keys({
   }).required(),
   phaseBannerTag: joi.string().required(),
   phaseBannerHtml: joi.string().required(),
-  databaseUrl: joi.string().uri().required(),
-  databaseSsl: joi.boolean().default(false),
   // Note: not a uri as it includes tokens for replacement
   subscriptionPatchUrl: joi.string().required(),
   subscriptionPostUrl: joi.string().required(),
   subscriptionGetUrl: joi.string().required(),
   subscriptionDeleteUrl: joi.string().required(),
   contactSubscriptionGetUrl: joi.string().required(),
+  contactGetUrl: joi.string().required(),
+  contactPostUrl: joi.string().required(),
   areaUrl: joi.string().uri().required()
 })
 
@@ -97,8 +97,8 @@ const config = {
     authToken: process.env.TWILIO_AUTH_TOKEN,
     fromPhoneNumber: process.env.TWILIO_FROM_PHONE_NUMBER
   },
-  databaseUrl: process.env.DATABASE_URL,
-  databaseSsl: process.env.DATABASE_SSL,
+  contactGetUrl: process.env.CONTACT_GET_URL,
+  contactPostUrl: process.env.CONTACT_POST_URL,
   contactSubscriptionGetUrl: process.env.CONTACT_SUBSCRIPTION_GET_URL,
   subscriptionGetUrl: process.env.SUBSCRIPTION_GET_URL,
   subscriptionPostUrl: process.env.SUBSCRIPTION_POST_URL,
