@@ -22,8 +22,12 @@ COPY --chown=node:node test ./test/
 COPY --chown=node:node client ./client/
 COPY --chown=node:node index.js ./
 
+RUN mkdir reports; chown node:node reports
+
 RUN npm run build
 
 USER node
+
+
 CMD [ "npm", "start" ]
 

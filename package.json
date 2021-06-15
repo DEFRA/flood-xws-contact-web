@@ -8,7 +8,7 @@
     "build:css": "bin/build-css",
     "build": "bin/build",
     "lint": "standard",
-    "unit-test": "lab -c -r console -o stdout -r lcov -o lcov.info",
+    "unit-test": "lab -c -r console -o stdout -r lcov -o reports/lcov.info",
     "test": "npm run lint && npm run unit-test",
     "deploy": "cf target -o defra-next-warning-system -s sandbox && cf push xws-contact-web-sandbox",
     "deploy:sandbox": "cf login -a api.london.cloud.service.gov.uk -o defra-next-warning-system -s sandbox && cf push xws-contact-web-sandbox",
