@@ -80,6 +80,7 @@ module.exports = [
       const areas = faAreas.concat(fwAreas)
       const auth = request.auth
       const { contactId, contactKind } = auth.credentials
+      console.log({ creds: auth.credentials })
 
       const channelName = getChannelNameFromContactKind(contactKind)
       await Promise.all(
@@ -115,6 +116,6 @@ function getChannelNameFromContactKind (contactKind) {
     case 'landline':
       return 'voice'
     default:
-      throw new Error('Unknown contact kind')
+      throw new Error(`Unknown contact kind ${contactKind}`)
   }
 }
