@@ -101,9 +101,9 @@ const config = {
   contactPostUrl: process.env.CONTACT_POST_URL,
   contactSubscriptionGetUrl: process.env.CONTACT_SUBSCRIPTION_GET_URL,
   subscriptionGetUrl: process.env.SUBSCRIPTION_GET_URL,
+  subscriptionPatchUrl: process.env.SUBSCRIPTION_GET_URL,
+  subscriptionDeleteUrl: process.env.SUBSCRIPTION_GET_URL,
   subscriptionPostUrl: process.env.SUBSCRIPTION_POST_URL,
-  subscriptionPatchUrl: process.env.SUBSCRIPTION_PATCH_URL,
-  subscriptionDeleteUrl: process.env.SUBSCRIPTION_DELETE_URL,
   areaUrl: process.env.AREA_URL
 }
 

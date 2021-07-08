@@ -67,8 +67,7 @@ async function getSubscription (subscriptionId) {
   try {
     const url = interpolate(subscriptionGetUrl, { subscriptionId })
     const { payload } = await Wreck.get(url)
-    const [subscription] = JSON.parse(payload)
-    return subscription
+    return JSON.parse(payload)
   } catch (error) {
     console.error({ subscriptionGetUrl, error })
   }
