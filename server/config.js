@@ -97,13 +97,13 @@ const config = {
     authToken: process.env.TWILIO_AUTH_TOKEN,
     fromPhoneNumber: process.env.TWILIO_FROM_PHONE_NUMBER
   },
-  contactGetUrl: process.env.CONTACT_GET_URL,
-  contactPostUrl: process.env.CONTACT_POST_URL,
-  contactSubscriptionGetUrl: process.env.CONTACT_SUBSCRIPTION_GET_URL,
-  subscriptionGetUrl: process.env.SUBSCRIPTION_GET_URL,
-  subscriptionPatchUrl: process.env.SUBSCRIPTION_GET_URL,
-  subscriptionDeleteUrl: process.env.SUBSCRIPTION_GET_URL,
-  subscriptionPostUrl: process.env.SUBSCRIPTION_POST_URL,
+  contactGetUrl: `${process.env.CONTACT_RESOURCE}?value=eq.\${value}`,
+  contactPostUrl: `${process.env.CONTACT_RESOURCE}`,
+  contactSubscriptionGetUrl: `${process.env.CONTACT_RESOURCE}?id=eq.\${contactId}&select=*,subscription(*,area(*))`,
+  subscriptionGetUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
+  subscriptionPatchUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
+  subscriptionDeleteUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
+  subscriptionPostUrl: process.env.SUBSCRIPTION_RESOURCE,
   areaUrl: process.env.AREA_URL
 }
 
