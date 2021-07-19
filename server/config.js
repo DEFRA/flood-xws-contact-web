@@ -104,7 +104,7 @@ const config = {
   subscriptionPatchUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
   subscriptionDeleteUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
   subscriptionPostUrl: process.env.SUBSCRIPTION_RESOURCE,
-  areaUrl: process.env.AREA_URL
+  areaUrl: process.env.AREA_RESOURCE
 }
 
 const { error, value } = schema.validate(config)
