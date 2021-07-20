@@ -1,14 +1,14 @@
 const http = require('./http')
-const { os: { key } } = require('../config')
+const { osApi } = require('../config')
 
 async function findByPostcode (postcode) {
-  const url = new URL('https://api.os.uk/search/places/v1/postcode')
+  const url = new URL(`${osApi.url}/search/places/v1/postcode`)
   const params = url.searchParams
 
   params.append('lr', 'EN')
   params.append('fq', 'logical_status_code:1')
   params.append('dataset', 'DPA')
-  params.append('key', key)
+  params.append('key', osApi.key)
   params.append('postcode', postcode)
 
   const payload = await http.getJson(url.href, true)
@@ -32,13 +32,13 @@ async function findByPostcode (postcode) {
 }
 
 async function findByName (query) {
-  const url = new URL('https://api.os.uk/search/names/v1/find')
+  const url = new URL(`${osApi.url}/search/names/v1/find`)
   const params = url.searchParams
   const localTypes = ['City', 'Town', 'Village', 'Suburban_Area', 'Other_Settlement', 'Hamlet']
 
   params.append('maxresults', '10')
   params.append('fq', localTypes.map(lt => `LOCAL_TYPE:${lt}`).join(' '))
-  params.append('key', key)
+  params.append('key', osApi.key)
   params.append('query', query)
 
   console.log(url.href)

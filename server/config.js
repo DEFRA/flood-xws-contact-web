@@ -10,8 +10,9 @@ const schema = joi.object().keys({
     password: joi.string().min(32).required(),
     isSecure: joi.boolean().required()
   }).required(),
-  os: joi.object().keys({
-    key: joi.string().required()
+  osApi: joi.object().keys({
+    key: joi.string().required(),
+    url: joi.string().uri().required()
   }).required(),
   verify: joi.object().keys({
     region: joi.string().required(),
@@ -64,8 +65,9 @@ const config = {
     password: process.env.COOKIE_PASSWORD,
     isSecure: process.env.COOKIE_IS_SECURE
   },
-  os: {
-    key: process.env.OS_KEY
+  osApi: {
+    url: process.env.OS_API_URL,
+    key: process.env.OS_API_KEY
   },
   verify: {
     region: process.env.VERIFY_REGION,
