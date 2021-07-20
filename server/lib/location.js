@@ -1,44 +1,14 @@
 const http = require('./http')
-const { os } = require('../config')
-const { placesKey, namesKey } = os
-
-async function findByUprn (id) {
-  const url = new URL('https://api.ordnancesurvey.co.uk/places/v1/addresses/uprn')
-  const params = url.searchParams
-
-  params.append('lr', 'EN')
-  params.append('fq', 'logical_status_code:1')
-  params.append('dataset', 'DPA')
-  params.append('key', placesKey)
-  params.append('uprn', id)
-
-  const payload = await http.getJson(url.href, true)
-
-  if (!payload || !payload.results || payload.results.length !== 1) {
-    throw new Error('Invalid response')
-  }
-
-  const result = payload.results[0].DPA
-  const address = {
-    uprn: result.UPRN,
-    nameOrNumber: result.BUILDING_NUMBER || result.BUILDING_NAME || result.ORGANISATION_NAME,
-    postcode: result.POSTCODE,
-    x: result.X_COORDINATE,
-    y: result.Y_COORDINATE,
-    address: result.ADDRESS
-  }
-
-  return address
-}
+const { os: { key } } = require('../config')
 
 async function findByPostcode (postcode) {
-  const url = new URL('https://api.ordnancesurvey.co.uk/places/v1/addresses/postcode')
+  const url = new URL('https://api.os.uk/search/places/v1/postcode')
   const params = url.searchParams
 
   params.append('lr', 'EN')
   params.append('fq', 'logical_status_code:1')
   params.append('dataset', 'DPA')
-  params.append('key', placesKey)
+  params.append('key', key)
   params.append('postcode', postcode)
 
   const payload = await http.getJson(url.href, true)
@@ -62,14 +32,16 @@ async function findByPostcode (postcode) {
 }
 
 async function findByName (query) {
-  const url = new URL('https://api.ordnancesurvey.co.uk/opennames/v1/find')
+  const url = new URL('https://api.os.uk/search/names/v1/find')
   const params = url.searchParams
   const localTypes = ['City', 'Town', 'Village', 'Suburban_Area', 'Other_Settlement', 'Hamlet']
 
   params.append('maxresults', '10')
   params.append('fq', localTypes.map(lt => `LOCAL_TYPE:${lt}`).join(' '))
-  params.append('key', namesKey)
+  params.append('key', key)
   params.append('query', query)
+
+  console.log(url.href)
 
   const payload = await http.getJson(url.href, true)
 
@@ -101,7 +73,6 @@ async function findByName (query) {
 }
 
 module.exports = {
-  findByUprn,
   findByName,
   findByPostcode
 }

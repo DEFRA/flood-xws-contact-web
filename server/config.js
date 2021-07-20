@@ -11,9 +11,7 @@ const schema = joi.object().keys({
     isSecure: joi.boolean().required()
   }).required(),
   os: joi.object().keys({
-    placesKey: joi.string().required(),
-    mapsKey: joi.string().required(),
-    namesKey: joi.string().required()
+    key: joi.string().required()
   }).required(),
   verify: joi.object().keys({
     region: joi.string().required(),
@@ -67,9 +65,7 @@ const config = {
     isSecure: process.env.COOKIE_IS_SECURE
   },
   os: {
-    placesKey: process.env.OS_PLACES_KEY,
-    mapsKey: process.env.OS_MAPS_KEY,
-    namesKey: process.env.OS_NAMES_KEY
+    key: process.env.OS_KEY
   },
   verify: {
     region: process.env.VERIFY_REGION,
