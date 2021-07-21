@@ -14,16 +14,6 @@ const schema = joi.object().keys({
     key: joi.string().required(),
     url: joi.string().uri().required()
   }).required(),
-  verify: joi.object().keys({
-    region: joi.string().required(),
-    applicationId: joi.string().required()
-  }).required(),
-  rateLimit: joi.object().keys({
-    enabled: joi.boolean().default(false),
-    requests: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
-    expiresIn: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
-    whitelist: joi.array().items(joi.string().required()).default([])
-  }).required(),
   redisCache: joi.object().keys({
     enabled: joi.boolean().default(false),
     host: joi.string().hostname().when('redisCacheEnabled', { is: true, then: joi.required() }),
@@ -68,16 +58,6 @@ const config = {
   osApi: {
     url: process.env.OS_API_URL,
     key: process.env.OS_API_KEY
-  },
-  verify: {
-    region: process.env.VERIFY_REGION,
-    applicationId: process.env.VERIFY_APPLICATION_ID
-  },
-  rateLimit: {
-    enabled: process.env.RATE_LIMIT_ENABLED,
-    requests: process.env.RATE_LIMIT_REQUESTS,
-    expiresIn: process.env.RATE_LIMIT_EXPIRES_IN,
-    whitelist: process.env.RATE_LIMIT_WHITELIST.split(',')
   },
   redisCache: {
     enabled: process.env.REDIS_CACHE_ENABLED
