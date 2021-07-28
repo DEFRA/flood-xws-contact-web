@@ -1,0 +1,59 @@
+# The manifest for the "xws-contact-web" service.
+# Read the full specification for the "Load Balanced Web Service" type at:
+#  https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/
+
+# Your service name will be used in naming your resources like log groups, ECS services, etc.
+name: xws-contact-web
+type: Load Balanced Web Service
+
+# Distribute traffic to your service.
+http:
+  # Requests to this path will be forwarded to your service.
+  # To match all requests you can use the "/" path.
+  path: '/'
+  # You can specify a custom health check path. The default is "/".
+  # healthcheck: '/'
+
+# Configuration for your containers and service.
+image:
+  # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
+  build: Dockerfile
+  # Port exposed through your container to route traffic to it.
+  port: 3001
+
+cpu: 256       # Number of CPU units for the task.
+memory: 512    # Amount of memory in MiB used by the task.
+count: 1       # Number of tasks that should be running in your service.
+exec: true     # Enable running commands in your container.
+
+# Optional fields for more advanced use-cases.
+#
+variables:                    # Pass environment variables as key value pairs.
+#  LOG_LEVEL: info
+  NODE_ENV: dev
+  ENV: local
+  PORT: 3001
+  HOST: 0.0.0.0
+  COOKIE_IS_SECURE: "false"
+  COOKIE_PASSWORD: "contact_web_dhfvbvhbhfhweru49q4vkhgjghsjkghrh84t9tyv3bhglsru"
+  HTTP_TIMEOUT_MS: 10000
+  PHASE_BANNER_TAG: "Local"
+  PHASE_BANNER_HTML: "This is a TEST service - you will not recieve alerts"
+  AREA_RESOURCE: "http://xws-area-api.flood-xws-contact.local:3004/area"
+  SUBSCRIPTION_RESOURCE: "http://xws-subscription-api.flood-xws-contact.local:3003/subscription"
+  CONTACT_RESOURCE: "http://xws-contact-api.flood-xws-contact.local:3000/contact"
+
+secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
+  OS_API_URL: /flood-xws-contact/test/xws-contact-web/OS_API_URL
+  OS_API_KEY: /flood-xws-contact/test/xws-contact-web/OS_API_KEY
+  NOTIFY_API_KEY: /flood-xws-contact/test/xws-contact-web/NOTIFY_API_KEY
+  NOTIFY_TEMPLATE_SMS_TOKEN: /flood-xws-contact/test/xws-contact-web/NOTIFY_TEMPLATE_SMS_TOKEN
+  NOTIFY_TEMPLATE_EMAIL_TOKEN: /flood-xws-contact/test/xws-contact-web/NOTIFY_TEMPLATE_EMAIL_TOKEN
+  TWILIO_ACCOUNT_ID: /flood-xws-contact/test/xws-contact-web/TWILIO_ACCOUNT_ID
+  TWILIO_AUTH_TOKEN: /flood-xws-contact/test/xws-contact-web/TWILIO_AUTH_TOKEN
+  TWILIO_FROM_PHONE_NUMBER: /flood-xws-contact/test/xws-contact-web/TWILIO_FROM_PHONE_NUMBER
+
+# You can override any of the values defined above by environment.
+#environments:
+#  test:
+#    count: 2               # Number of tasks to run for the "test" environment.
