@@ -35,7 +35,6 @@ variables:                    # Pass environment variables as key value pairs.
   PORT: 3001
   HOST: 0.0.0.0
   COOKIE_IS_SECURE: "false"
-  COOKIE_PASSWORD: "contact_web_dhfvbvhbhfhweru49q4vkhgjghsjkghrh84t9tyv3bhglsru"
   HTTP_TIMEOUT_MS: 10000
   PHASE_BANNER_TAG: "Local"
   PHASE_BANNER_HTML: "This is a TEST service - you will not recieve alerts"
@@ -46,6 +45,7 @@ variables:                    # Pass environment variables as key value pairs.
 secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
   OS_API_URL: /flood-xws-contact/test/xws-contact-web/OS_API_URL
   OS_API_KEY: /flood-xws-contact/test/xws-contact-web/OS_API_KEY
+  COOKIE_PASSWORD: /flood-xws-contact/test/xws-contact-web/COOKIE_PASSWORD
   NOTIFY_API_KEY: /flood-xws-contact/test/xws-contact-web/NOTIFY_API_KEY
   NOTIFY_TEMPLATE_SMS_TOKEN: /flood-xws-contact/test/xws-contact-web/NOTIFY_TEMPLATE_SMS_TOKEN
   NOTIFY_TEMPLATE_EMAIL_TOKEN: /flood-xws-contact/test/xws-contact-web/NOTIFY_TEMPLATE_EMAIL_TOKEN
