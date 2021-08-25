@@ -12,15 +12,16 @@ const {
 
 async function postContact (value, contactKindName) {
   try {
-    const payload = {
+    const contactDetails = {
       value,
       contactKindName,
       active: true,
       contactTypeName: 'public',
       hazardName: 'flood'
     }
-    const { res } = await Wreck.post(contactPostUrl, { payload })
-    return res.statusCode
+    const { payload } = await Wreck.post(contactPostUrl, { headers: { Prefer: 'return=representation' }, payload: contactDetails })
+    const [contact] = JSON.parse(payload)
+    return contact
   } catch (error) {
     console.log({ contactPostUrl, error })
   }
