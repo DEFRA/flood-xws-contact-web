@@ -77,7 +77,7 @@ const config = {
   },
   contactGetUrl: `${process.env.CONTACT_RESOURCE}?value=eq.\${value}`,
   contactPostUrl: `${process.env.CONTACT_RESOURCE}`,
-  contactSubscriptionGetUrl: `${process.env.CONTACT_RESOURCE}?id=eq.\${contactId}&select=*,subscription(*,area(*))`,
+  contactSubscriptionGetUrl: `${process.env.CONTACT_RESOURCE}?id=eq.\${contactId}&select=*,subscription(*)`,
   subscriptionGetUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
   subscriptionPatchUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
   subscriptionDeleteUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
