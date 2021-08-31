@@ -7,7 +7,8 @@ const {
   subscriptionPostUrl,
   subscriptionGetUrl,
   subscriptionDeleteUrl,
-  contactSubscriptionGetUrl
+  contactSubscriptionGetUrl,
+  areaUrl
 } = require('../config.js')
 
 async function postContact (value, contactKindName) {
@@ -58,9 +59,17 @@ async function getSubscriptions (contactId) {
     const url = interpolate(contactSubscriptionGetUrl, { contactId })
     const { payload } = await Wreck.get(url)
     const [contact] = JSON.parse(payload)
-    return contact.subscription
+    return await Promise.all(contact.subscription.map(async s => {
+      // TODO: type defined as input validation in area api requires it but query doesn't use it
+      // needs further work. ? are codes unique across types
+      const { payload } = await Wreck.get(`${areaUrl}?type=unspecified&code=${s.areaCode}`)
+      return {
+        ...s,
+        area: JSON.parse(payload)
+      }
+    }))
   } catch (error) {
-    console.error({ contactSubscriptionGetUrl, error })
+    console.error({ contactSubscriptionGetUrl, areaUrl, error })
   }
 }
 
