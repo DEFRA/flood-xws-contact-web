@@ -36,24 +36,3 @@ jobs:
         TWILIO_ACCOUNT_ID: ${{ secrets.TWILIO_ACCOUNT_ID }}
         TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
         TWILIO_FROM_PHONE_NUMBER: ${{ secrets.TWILIO_FROM_PHONE_NUMBER }}
-
-  deploy:
-    needs: test
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-18.04
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 12
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-    - run: npm install
-    - run: npm run build --if-present
-    - uses: citizen-of-planet-earth/cf-cli-action@master
-      with:
-        cf_api: https://api.london.cloud.service.gov.uk
-        cf_username: ${{ secrets.CF_USERNAME }}
-        cf_password: ${{ secrets.CF_PASSWORD }}
-        cf_org: defra-next-warning-system
-        cf_space: sandbox
-        command: push "xws-contact-web-sandbox"
