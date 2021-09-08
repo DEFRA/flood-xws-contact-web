@@ -17,39 +17,25 @@ jobs:
     - run: npm test
       env:
         CI: true
-        PORT: 3000
-        HOST: "0.0.0.0"
-        ENV: "local"
-        COOKIE_PASSWORD: ${{ secrets.COOKIE_PASSWORD }}
-        COOKIE_IS_SECURE: true
-        OS_PLACES_KEY: ${{ secrets.OS_PLACES_KEY }}
-        OS_MAPS_KEY: ${{ secrets.OS_MAPS_KEY }}
-        OS_NAMES_KEY: ${{ secrets.OS_NAMES_KEY }}
-        VERIFY_REGION: eu-west-1
-        VERIFY_APPLICATION_ID: ${{ secrets.VERIFY_APPLICATION_ID }}
-        RATE_LIMIT_ENABLED: true
-        RATE_LIMIT_REQUESTS: 250
-        RATE_LIMIT_EXPIRES_IN: 720
-        RATE_LIMIT_WHITELIST: ${{ secrets.RATE_LIMIT_WHITELIST }}
-        REDIS_CACHE_ENABLED: false
+        NODE_ENV: local
+        PORT: 3001
+        HOST: 0.0.0.0
+        COOKIE_IS_SECURE: "false"
         HTTP_TIMEOUT_MS: 10000
+        PHASE_BANNER_TAG: "Local"
+        PHASE_BANNER_HTML: "This is a TEST service - you will not recieve alerts"
+        AREA_RESOURCE: "http://area-api:3004/area"
+        SUBSCRIPTION_RESOURCE: "http://subscription-api:3003/subscription"
+        CONTACT_RESOURCE: "http://contact-api:3000/contact"
+        COOKIE_PASSWORD: ${{ secrets.COOKIE_PASSWORD }}
+        OS_API_URL: ${{ secrets.OS_API_URL }}
+        OS_API_KEY: ${{ secrets.OS_API_KEY }}
         NOTIFY_API_KEY: ${{ secrets.NOTIFY_API_KEY }}
         NOTIFY_TEMPLATE_SMS_TOKEN: ${{ secrets.NOTIFY_TEMPLATE_SMS_TOKEN }}
         NOTIFY_TEMPLATE_EMAIL_TOKEN: ${{ secrets.NOTIFY_TEMPLATE_EMAIL_TOKEN }}
         TWILIO_ACCOUNT_ID: ${{ secrets.TWILIO_ACCOUNT_ID }}
         TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
         TWILIO_FROM_PHONE_NUMBER: ${{ secrets.TWILIO_FROM_PHONE_NUMBER }}
-        PHASE_BANNER_TAG: local 
-        PHASE_BANNER_HTML: "This is a TEST service - you will not issue alerts"
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        AREA_URL: ${{ secrets.AREA_URL }}
-        SUBSCRIPTION_PATCH_URL: ${{ secrets.SUBSCRIPTION_PATCH_URL }}
-        SUBSCRIPTION_POST_URL: ${{ secrets.SUBSCRIPTION_POST_URL }}
-        SUBSCRIPTION_GET_URL: ${{ secrets.SUBSCRIPTION_GET_URL }}
-        SUBSCRIPTION_DELETE_URL: ${{ secrets.SUBSCRIPTION_DELETE_URL }}
-        CONTACT_SUBSCRIPTION_GET_URL: ${{ secrets.CONTACT_SUBSCRIPTION_GET_URL }}
-        CONTACT_GET_URL: ${{ secrets.CONTACT_GET_URL }}
-        CONTACT_POST_URL: ${{ secrets.CONTACT_POST_URL }}
 
   deploy:
     needs: test
