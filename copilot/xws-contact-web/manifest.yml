@@ -1,0 +1,55 @@
+# The manifest for the "xws-contact-web" service.
+# Read the full specification for the "Load Balanced Web Service" type at:
+#  https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/
+
+# Your service name will be used in naming your resources like log groups, ECS services, etc.
+name: xws-contact-web
+type: Load Balanced Web Service
+
+# Distribute traffic to your service.
+http:
+  # Requests to this path will be forwarded to your service.
+  # To match all requests you can use the "/" path.
+  path: '/'
+  # You can specify a custom health check path. The default is "/".
+  # healthcheck: '/'
+
+# Configuration for your containers and service.
+image:
+  # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
+  build: Dockerfile
+  # Port exposed through your container to route traffic to it.
+  port: 3001
+
+cpu: 256       # Number of CPU units for the task.
+memory: 512    # Amount of memory in MiB used by the task.
+count: 1       # Number of tasks that should be running in your service.
+exec: true     # Enable running commands in your container.
+
+variables:
+  PORT: 3001
+  HOST: 0.0.0.0
+  COOKIE_IS_SECURE: "false"
+  HTTP_TIMEOUT_MS: 10000
+
+secrets:
+  # Consider if these will be env specfic
+  OS_API_URL: /flood-xws-contact/xws-contact-web/OS_API_URL
+  OS_API_KEY: /flood-xws-contact/xws-contact-web/OS_API_KEY
+  COOKIE_PASSWORD: /flood-xws-contact/xws-contact-web/COOKIE_PASSWORD
+  NOTIFY_API_KEY: /flood-xws-contact/xws-contact-web/NOTIFY_API_KEY
+  NOTIFY_TEMPLATE_SMS_TOKEN: /flood-xws-contact/xws-contact-web/NOTIFY_TEMPLATE_SMS_TOKEN
+  NOTIFY_TEMPLATE_EMAIL_TOKEN: /flood-xws-contact/xws-contact-web/NOTIFY_TEMPLATE_EMAIL_TOKEN
+  TWILIO_ACCOUNT_ID: /flood-xws-contact/xws-contact-web/TWILIO_ACCOUNT_ID
+  TWILIO_AUTH_TOKEN: /flood-xws-contact/xws-contact-web/TWILIO_AUTH_TOKEN
+  TWILIO_FROM_PHONE_NUMBER: /flood-xws-contact/xws-contact-web/TWILIO_FROM_PHONE_NUMBER
+
+environments:
+  test:
+    variables:
+      NODE_ENV: test
+      PHASE_BANNER_TAG: "Test"
+      PHASE_BANNER_HTML: "This is a TEST service - you will not recieve alerts"
+      AREA_RESOURCE: "http://xws-area-api.test.flood-xws-contact.local:3004/area"
+      SUBSCRIPTION_RESOURCE: "http://xws-subscription-api.test.flood-xws-contact.local:3003/subscription"
+      CONTACT_RESOURCE: "http://xws-contact-db.test.flood-xws-contact.local:3000/contact"
