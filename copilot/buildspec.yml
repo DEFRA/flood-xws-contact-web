@@ -25,12 +25,14 @@ phases:
       - pipeline=$(cat $CODEBUILD_SRC_DIR/copilot/pipeline.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))')
       - echo "PIPELINE $pipeline"
       - pl_envs=$(echo $pipeline | jq '.stages[].name' | sed 's/"//g')
+      - echo "PL_ENVS $pl_envs"
       - >
         for pl_env in $pl_envs; do
         ./copilot-linux env upgrade -n $pl_env;
         done;
       # Find all the local services in the workspace.
       - svcs=$(./copilot-linux svc ls --local --json | jq '.services[].name' | sed 's/"//g')
+      - echo "SVCS- $svcs"
       # Find all the local jobs in the workspace.
       - jobs=$(./copilot-linux job ls --local --json | jq '.jobs[].name' | sed 's/"//g')
       # Generate the cloudformation templates.
@@ -38,6 +40,7 @@ phases:
       # We truncate the tag (from the front) to 128 characters, the limit for Docker tags
       # (https://docs.docker.com/engine/reference/commandline/tag/)
       - tag=$(sed 's/:/-/g' <<<"$CODEBUILD_BUILD_ID" | rev | cut -c 1-128 | rev)
+      - echo "TAG- $tag"
       - >
         for env in $pl_envs; do
           for svc in $svcs; do
@@ -47,6 +50,7 @@ phases:
           ./copilot-linux job package -n $job -e $env --output-dir './infrastructure' --tag $tag;
           done;
         done;
+      - echo "LS INFRASTRUCTURE"
       - ls -lah ./infrastructure
       # Concatenate jobs and services into one var for addons
       # If addons exists, upload addons templates to each S3 bucket and write template URL to template config files.
