@@ -18,6 +18,7 @@ phases:
       # - make test
   post_build:
     commands:
+      - echo "HELLO MARCO"
       - ls -l
       - export COLOR="false"
       # First, upgrade the cloudformation stack of every environment in the pipeline.
