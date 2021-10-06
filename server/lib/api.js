@@ -1,6 +1,6 @@
-const Wreck = require('@hapi/wreck')
 const interpolate = require('xws-shared/util/interpolate')
 const {
+  httpTimeoutMs,
   contactGetUrl,
   contactPostUrl,
   subscriptionPatchUrl,
@@ -10,6 +10,9 @@ const {
   contactSubscriptionGetUrl,
   areaUrl
 } = require('../config.js')
+const Wreck = require('@hapi/wreck').defaults({
+  timeout: httpTimeoutMs
+})
 
 async function postContact (value, contactKindName) {
   try {
