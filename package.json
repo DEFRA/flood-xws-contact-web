@@ -42,7 +42,6 @@
     "@hapi/code": "8.0.2",
     "@hapi/lab": "24.1.0",
     "codeclimate-test-reporter": "0.5.1",
-    "jsdoc": "3.6.6",
     "node-sass": "5.0.0",
     "standard": "16.0.3"
   },
