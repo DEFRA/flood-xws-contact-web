@@ -1,7 +1,7 @@
 {
-  "name": "contact-web",
+  "name": "flood-xws-contact-web",
   "version": "0.1.0",
-  "description": "XWS Contact Web",
+  "description": "XWS Contact Web - the subscription managment application",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,11 +9,7 @@
     "build": "bin/build",
     "lint": "standard",
     "unit-test": "lab -c -r console -o stdout -r lcov -o lcov.info",
-    "test": "npm run lint && npm run unit-test",
-    "deploy": "cf target -o defra-next-warning-system -s sandbox && cf push xws-contact-web-sandbox",
-    "deploy:sandbox": "cf login -a api.london.cloud.service.gov.uk -o defra-next-warning-system -s sandbox && cf push xws-contact-web-sandbox",
-    "deploy:test": "cf login -a api.london.cloud.service.gov.uk -o defra-next-warning-system -s test && cf push xws-contact-web-test",
-    "deploy:production": "cf login -a api.london.cloud.service.gov.uk -o defra-next-warning-system -s production && cf push xws-contact-web-production"
+    "test": "npm run lint && npm run unit-test"
   },
   "author": "DEFRA",
   "license": "OGL-UK-3.0",
