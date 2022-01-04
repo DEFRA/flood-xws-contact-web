@@ -1,26 +1,45 @@
 {% extends "two-thirds.html" %}
 
-{% block twoThirds %}
-{% if errorList.length %}
-  {{ govukErrorSummary({
-    titleText: "There is a problem",
-    errorList: errorList
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% set formAction = path %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPath
   }) }}
-{% endif %}
-
-{% block beforeForm %}
 {% endblock %}
 
-<form method="post" action="{{formAction | default("")}}" novalidate>
-  {% block form %}
+{% block twoThirds %}
+  {% if errorList.length %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorList
+      })
+    }}
+  {% endif %}
+
+  {% block beforeForm %}
   {% endblock %}
 
-  {% block button %}
-    {{ govukButton({ text: formSubmitButtonText | default("Continue") }) }}
+  <form id="form" method="post" action="{{formAction | default('')}}"
+    novalidate enctype="{{formEncType | default('application/x-www-form-urlencoded')}}">
+    <input type="hidden" name="crumb" value="{{crumb}}"/>
+    {% block form %}
+    {% endblock %}
+
+    {% block button %}
+      {{ govukButton({
+        text: formSubmitButtonText | default("Continue"),
+        preventDoubleClick: true
+      }) }}
+    {% endblock %}
+  </form>
+
+  {% block afterForm %}
   {% endblock %}
-</form>
-
-{% block afterForm %}
-{% endblock %}
-
 {% endblock %}
