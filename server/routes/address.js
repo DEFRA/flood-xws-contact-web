@@ -1,5 +1,5 @@
 const joi = require('joi')
-const BaseModel = require('xws-shared/view/model')
+const BaseModel = require('flood-xws-common/view/model')
 const { postcodeRegex } = require('../lib/postcode')
 const { redirectToCountry } = require('../lib/england-only')
 const { findByPostcode } = require('../lib/location')

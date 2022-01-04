@@ -1,6 +1,6 @@
 const joi = require('joi')
-const BaseModel = require('xws-shared/view/model')
-const { getMappedErrors } = require('xws-shared/view/errors')
+const BaseModel = require('flood-xws-common/view/model')
+const { getMappedErrors } = require('flood-xws-common/view/errors')
 const config = require('../config')
 const { generateTOTP } = require('../lib/otp')
 const { sendEmailToken } = require('../lib/email')

@@ -1,5 +1,5 @@
 const joi = require('joi')
-const BaseModel = require('xws-shared/view/model')
+const BaseModel = require('flood-xws-common/view/model')
 const { updateSubscription, getSubscription } = require('../lib/api')
 
 module.exports = [

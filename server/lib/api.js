@@ -1,4 +1,4 @@
-const interpolate = require('xws-shared/util/interpolate')
+const interpolate = require('flood-xws-common/util/interpolate')
 const {
   httpTimeoutMs,
   contactGetUrl,

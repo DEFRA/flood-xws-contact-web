@@ -1,6 +1,6 @@
 const joi = require('joi')
-const BaseModel = require('xws-shared/view/model')
-const { getMappedErrors } = require('xws-shared/view/errors')
+const BaseModel = require('flood-xws-common/view/model')
+const { getMappedErrors } = require('flood-xws-common/view/errors')
 
 const errorMessages = {
   contactType: 'Choose a valid contact type'
