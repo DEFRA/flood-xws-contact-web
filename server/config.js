@@ -14,11 +14,6 @@ const schema = joi.object().keys({
     key: joi.string().required(),
     url: joi.string().uri().required()
   }).required(),
-  redisCache: joi.object().keys({
-    enabled: joi.boolean().default(false),
-    host: joi.string().hostname().when('redisCacheEnabled', { is: true, then: joi.required() }),
-    port: joi.number().integer().when('redisCacheEnabled', { is: true, then: joi.required() })
-  }).required(),
   httpTimeoutMs: joi.number().required().min(0).max(30000),
   notify: joi.object().keys({
     apiKey: joi.string().required(),
@@ -46,7 +41,7 @@ const schema = joi.object().keys({
 })
 
 const config = {
-  env: process.env.NODE_ENV,
+  env: process.env.ENV,
   host: process.env.HOST,
   port: process.env.PORT,
   phaseBannerTag: process.env.PHASE_BANNER_TAG,
@@ -58,9 +53,6 @@ const config = {
   osApi: {
     url: process.env.OS_API_URL,
     key: process.env.OS_API_KEY
-  },
-  redisCache: {
-    enabled: process.env.REDIS_CACHE_ENABLED
   },
   httpTimeoutMs: process.env.HTTP_TIMEOUT_MS,
   notify: {
