@@ -1,0 +1,23 @@
+{% extends "form.html" %}
+
+{% block form %}
+{{
+  govukRadios({
+    id: "consent",
+    name: "consent",
+    classes: "govuk-radios--inline",
+    fieldset: {
+      legend: {
+        text: "Get warnings by text message?",
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
+    items: [
+      { value: "true", text: "Yes" },
+      { value: "false", text: "No" }
+    ],
+    errorMessage: errors.consent
+  }) 
+}}
+{% endblock %}

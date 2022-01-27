@@ -1,11 +1,13 @@
 require('dotenv').config()
 const joi = require('joi')
-const envs = ['development', 'test', 'production']
+const envs = ['sandbox', 'development', 'test', 'production']
 
 const schema = joi.object().keys({
   env: joi.string().valid(...envs).required(),
   host: joi.string().hostname().required(),
   port: joi.number().required(),
+  databaseUrl: joi.string().required(),
+  databaseSsl: joi.boolean().required(),
   cookie: joi.object().keys({
     password: joi.string().min(32).required(),
     isSecure: joi.boolean().required()
@@ -29,21 +31,17 @@ const schema = joi.object().keys({
   }).required(),
   phaseBannerTag: joi.string().required(),
   phaseBannerHtml: joi.string().required(),
-  // Note: not a uri as it includes tokens for replacement
-  subscriptionPatchUrl: joi.string().required(),
-  subscriptionPostUrl: joi.string().required(),
-  subscriptionGetUrl: joi.string().required(),
-  subscriptionDeleteUrl: joi.string().required(),
-  contactSubscriptionGetUrl: joi.string().required(),
-  contactGetUrl: joi.string().required(),
-  contactPostUrl: joi.string().required(),
-  areaUrl: joi.string().uri().required()
+  logLevel: joi.string().valid('debug', 'warn').required(),
+  cacheViews: joi.boolean().default(true).required(),
+  storeTokenInState: joi.boolean().default(false).required()
 })
 
 const config = {
   env: process.env.ENV,
   host: process.env.HOST,
   port: process.env.PORT,
+  databaseUrl: process.env.DATABASE_URL,
+  databaseSsl: process.env.DATABASE_SSL || false,
   phaseBannerTag: process.env.PHASE_BANNER_TAG,
   phaseBannerHtml: process.env.PHASE_BANNER_HTML,
   cookie: {
@@ -67,14 +65,9 @@ const config = {
     authToken: process.env.TWILIO_AUTH_TOKEN,
     fromPhoneNumber: process.env.TWILIO_FROM_PHONE_NUMBER
   },
-  contactGetUrl: `${process.env.CONTACT_RESOURCE}?value=eq.\${value}`,
-  contactPostUrl: `${process.env.CONTACT_RESOURCE}`,
-  contactSubscriptionGetUrl: `${process.env.CONTACT_RESOURCE}?id=eq.\${contactId}&select=*,subscription(*)`,
-  subscriptionGetUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
-  subscriptionPatchUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
-  subscriptionDeleteUrl: `${process.env.SUBSCRIPTION_RESOURCE}/\${subscriptionId}`,
-  subscriptionPostUrl: process.env.SUBSCRIPTION_RESOURCE,
-  areaUrl: process.env.AREA_RESOURCE
+  logLevel: process.env.LOG_LEVEL || 'debug',
+  cacheViews: process.env.CACHE_VIEWS || true,
+  storeTokenInState: process.env.STORE_TOKEN_IN_STATE || false
 }
 
 const { error, value } = schema.validate(config)
@@ -83,6 +76,7 @@ if (error) {
   throw new Error(`The server config is invalid. ${error.message}`)
 }
 
-value.isLocal = value.env === 'local'
+value.serviceName = 'Get flood warnings'
+value.defaultPageTitle = `${value.serviceName} - GOV.UK`
 
 module.exports = value

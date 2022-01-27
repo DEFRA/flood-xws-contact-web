@@ -13,7 +13,7 @@ module.exports = {
           ttl: 30 * 60 * 1000
         },
         keepAlive: true,
-        redirectTo: '/contact-type'
+        redirectTo: '/'
       })
 
       server.auth.default('session')

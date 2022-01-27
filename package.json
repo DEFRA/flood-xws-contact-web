@@ -9,38 +9,42 @@
     "build": "bin/build",
     "lint": "standard",
     "unit-test": "lab -c -r console -o stdout -r lcov -o lcov.info",
-    "test": "npm run lint && npm run unit-test"
+    "test": "npm run lint && npm run unit-test",
+    "deploy": "cf target -o defra-next-warning-system -s sandbox && cf push xws-contact-web-sandbox",
+    "deploy:sandbox": "cf login -a api.london.cloud.service.gov.uk -o defra-next-warning-system -s sandbox && cf push xws-contact-web-sandbox",
+    "deploy:test": "cf login -a api.london.cloud.service.gov.uk -o defra-next-warning-system -s test && cf push xws-contact-web-test"
   },
   "author": "DEFRA",
   "license": "OGL-UK-3.0",
   "engines": {
-    "node": "12"
+    "node": "14"
   },
   "dependencies": {
     "@hapi/boom": "9.1.4",
     "@hapi/cookie": "11.0.2",
     "@hapi/hapi": "20.2.1",
     "@hapi/hoek": "9.2.1",
-    "@hapi/inert": "6.0.4",
+    "@hapi/inert": "6.0.5",
     "@hapi/vision": "6.1.0",
     "@hapi/wreck": "17.1.0",
     "@hapi/yar": "10.1.1",
     "blipp": "4.0.2",
-    "dotenv": "10.0.0",
+    "dotenv": "14.2.0",
     "flood-xws-common": "github:DEFRA/flood-xws-common",
-    "google-libphonenumber": "3.2.25",
+    "google-libphonenumber": "3.2.26",
     "govuk-frontend": "4.0.0",
     "hapi-pino": "9.1.0",
     "joi": "17.5.0",
     "notifications-node-client": "5.1.0",
     "nunjucks": "3.2.3",
     "otplib": "12.0.1",
+    "pg": "8.7.1",
     "proj4": "2.7.5",
-    "twilio": "3.72.0"
+    "twilio": "3.73.0"
   },
   "devDependencies": {
     "@hapi/code": "8.0.5",
-    "@hapi/lab": "24.4.0",
+    "@hapi/lab": "24.5.0",
     "codeclimate-test-reporter": "0.5.1",
     "node-sass": "7.0.1",
     "standard": "16.0.4"

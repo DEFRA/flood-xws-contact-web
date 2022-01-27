@@ -1,6 +1,6 @@
 module.exports = {
   method: 'GET',
-  path: '/logout',
+  path: '/signout',
   handler: async (request, h) => {
     request.cookieAuth.clear()
     return h.redirect('/')

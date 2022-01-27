@@ -1,60 +1,59 @@
-{% extends "layout.html" %}
+{% extends "two-thirds.html" %}
 
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Get flood warnings</h1>
-    <p>Use this service to:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>sign up to receive free flood warning information in England by text message, email or automated
-        telephone message</li>
-      <li>edit or remove contacts you already have registered. To edit an existing contact, please <a
-        href="/contact-type?signin">sign in</a></li>
-    </ul>
+{% block twoThirds %}
+  <h1 class="govuk-heading-xl">{{ serviceName }}</h1>
+  
+  <p>Use this free service to:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>get flood warnings by text message, email or automated telephone message</li>
+    <li>edit or remove contact information you have already registered. To sign in, please <a
+        href="/email">click here</a>.</li>
+  </ul>
+  
+  <p class="govuk-body">This service will tell you when a flood from rivers, the sea, or groundwater is expected in a
+    flood risk area in England.</p>
+  <p class="govuk-body">You will get updates about changes to the flood situation. This might be information about higher
+    water levels, or if an earlier start to the flood is expected.</p>
+  <p class="govuk-body">This service does not cover surface water flooding.</p>
+  <p class="govuk-body">Signing up takes around 10 minutes.</p>
 
-    {{
-      govukButton({
-        text: "Start now",
-        href: "/contact-type",
-        isStartButton: true
-      })
-    }}
-    <h2 class="govuk-heading-m">Other ways to register</h2>
-    <p>If you’re in England, Scotland or Wales you can also register, update or remove your contacts by calling
-      Floodline.
-    </p>
-    {% include "partials/floodline.html" %}
-    <h2 class="govuk-heading-m">Warnings for organisations with more than one location</h2>
-    <p>If you’re in England or Wales, you can register for warnings for more than one location, for example if your
-      organisation has many sites, or you are interested in a large geographical area.</p>
-    <p>To register, call the Targeted Flood Warning Service - it is free for not-for-profit organisations, but there may
-      be a charge for other organisations.</p>
-    <div class="govuk-inset-text">
-      <p><strong>Targeted Flood Warning Service</strong><br>
-        Telephone: 03708 506 506<br>
-        Monday to Friday, 8am to 6pm<br>
-        <a href="https://www.gov.uk/call-charges">Find out about call charges</a></p>
-    </div>
-    <p>If you are already registered to the Targeted Flood Warning Service, you can sign in <a
-        href="https://www.fws.environment-agency.gov.uk/app/olr/fwslogin">here</a>.</p>
-  </div>
-  <div class="govuk-grid-column-one-third">
-    <aside class="app-related-items" role="complementary">
-      <h2 class="govuk-heading-m" id="subsection-title">Related content</h2>
-      <nav aria-labelledby="subsection-title" role="navigation">
-        <ul class="govuk-list govuk-body-s">
-          <li>
-            <a href="https://flood-warning-information.service.gov.uk/warnings">Flood information service</a>
-          </li>
-          <li>
-            <a href="https://flood-warning-information.service.gov.uk/5-day-flood-risk">5-day flood risk for England and
-              Wales</a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-  </div>
-</div>
+  {{
+    govukButton({
+      text: "Start now",
+      href: "/find-location",
+      isStartButton: true
+    })
+  }}
+
+  <h2 class="govuk-heading-m">Before you start</h2>
+  <p class="govuk-body">You will need an email address.</p>
+  <p>You may need a phone number you can be contacted on day or night.</p>
+  <p><a href="https://get-flood-warnings.herokuapp.com/v5/subscribe-journey/not-england">Flood warnings for Scotland,
+      Wales and Northern Ireland.</a></p>
+
+  <h2 class="govuk-heading-m">Other ways to get flood warnings</h2>
+  <p>You can also sign up by calling Floodline:<br>
+    Telephone: 0345 988 1188<br>
+    Textphone: 0345 602 6340<br>
+    24-hour service<br>
+    <a href="https://www.gov.uk/call-charges" class="govuk-link--no-visited-state">Find out about call charges</a>
+  </p>
+{% endblock %}
+
+{% block oneThird %}
+  <aside class="app-related-items" role="complementary">
+    <h2 class="govuk-heading-m" id="subsection-title">Related content</h2>
+    <nav aria-labelledby="subsection-title" role="navigation">
+      <ul class="govuk-list govuk-body-s">
+        <li>
+          <a href="https://check-for-flooding.service.gov.uk">Check for flooding in England</a>
+        </li>
+        <li>
+          <a href="https://check-for-flooding.service.gov.uk/river-and-sea-levels">River and sea levels in England</a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
 {% endblock %}

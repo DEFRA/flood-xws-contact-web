@@ -3,7 +3,6 @@ const nunjucks = require('nunjucks')
 const config = require('../config')
 const pkg = require('../../package.json')
 const analyticsAccount = config.analyticsAccount
-const serviceName = 'Get flood warnings'
 
 module.exports = {
   plugin: require('@hapi/vision'),
@@ -32,12 +31,13 @@ module.exports = {
     },
     path: '../views',
     relativeTo: __dirname,
-    isCached: !config.isLocal,
+    isCached: config.cacheViews,
     context: {
       appVersion: pkg.version,
       assetPath: '/assets',
-      serviceName: serviceName,
-      pageTitle: `${serviceName} - GOV.UK`,
+      serviceName: config.serviceName,
+      pageTitle: config.defaultPageTitle,
+      defaultPageTitle: config.defaultPageTitle,
       analyticsAccount: analyticsAccount,
       phaseBannerTag: config.phaseBannerTag,
       phaseBannerHtml: config.phaseBannerHtml

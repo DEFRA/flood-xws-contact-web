@@ -1,18 +1,21 @@
 const routes = [].concat(
   require('../routes/home'),
-  require('../routes/contact-type'),
-  require('../routes/telephone'),
   require('../routes/email'),
-  require('../routes/verify'),
+  require('../routes/mobile'),
+  require('../routes/landline'),
+  require('../routes/verify-email'),
+  require('../routes/verify-mobile'),
+  require('../routes/verify-landline'),
+  require('../routes/consent-email'),
+  require('../routes/consent-mobile'),
+  require('../routes/consent-landline'),
   require('../routes/find-location'),
-  require('../routes/add-location'),
-  require('../routes/edit-location'),
+  require('../routes/locations'),
   require('../routes/england-only'),
-  require('../routes/address'),
-  require('../routes/contact'),
+  require('../routes/account'),
   require('../routes/status'),
   require('../routes/public'),
-  require('../routes/logout')
+  require('../routes/signout')
 )
 
 module.exports = {

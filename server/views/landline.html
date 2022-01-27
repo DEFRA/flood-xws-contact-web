@@ -1,0 +1,28 @@
+{% extends "form.html" %}
+
+{% block form %}
+{{
+  govukInput({
+    id: "landline",
+    name: "landline",
+    label: {
+      text: "What is your landline telephone number?",
+      classes: "govuk-label--l",
+      isPageHeading: true
+    },
+    hint: {
+      html: "
+        You will need access to this contact, as we will call you with a code.
+      "
+    },
+    classes: "govuk-input--width-20",
+    type: "tel",
+    autocomplete: "tel",
+    attributes: {
+      spellcheck: "false"
+    },
+    value: data.landline,
+    errorMessage: errors.landline
+  }) 
+}}
+{% endblock %}

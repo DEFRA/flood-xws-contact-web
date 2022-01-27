@@ -42,35 +42,28 @@ module.exports = [
       try {
         // Send totp token
         const salt = Date.now()
-        const token = generateTOTP(`${sessionId}_${email}_${salt}`)
-        const sendResult = await sendEmailToken(email, token)
+        const secret = `${sessionId}_${email}_${salt}`
+        const token = generateTOTP(secret)
+        await sendEmailToken(email, token)
 
-        const state = {
+        const emailState = {
           salt,
-          attemptsRemaining: 3,
-          contact: {
-            kind: 'email',
-            value: email,
-            raw: email,
-            deliveryMethod: 'email',
-            sendResult: {
-              status: sendResult.statusText,
-              uri: sendResult.data.uri
-            }
-          }
+          raw: email,
+          value: email,
+          attemptsRemaining: 3
         }
 
         // The token is stored in state to enable
         // e2e testing in certain environments
-        const storeTokenInState = config.isLocal
+        const storeTokenInState = config.storeTokenInState
 
         if (storeTokenInState) {
-          state.token = token
+          emailState.token = token
         }
 
-        request.yar.set(state)
+        request.yar.set('email', emailState)
 
-        return h.redirect('/verify')
+        return h.redirect('/verify-email')
       } catch (err) {
         request.log('error', err)
         const errors = { email: errorMessages.email.incorrect }

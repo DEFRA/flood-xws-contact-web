@@ -1,0 +1,13 @@
+{% extends "form.html" %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block beforeForm %}
+<h1 class="govuk-heading-l">Check your answers</h1>
+
+{{ govukSummaryList({
+  classes: 'govuk-!-margin-bottom-9',
+  rows: rows
+}) }}
+
+{% endblock %}

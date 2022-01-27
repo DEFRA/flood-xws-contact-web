@@ -3,7 +3,9 @@ const BaseModel = require('flood-xws-common/view/model')
 const { getMappedErrors } = require('flood-xws-common/view/errors')
 const { postcodeRegex } = require('../lib/postcode')
 const { redirectToCountry } = require('../lib/england-only')
+const { findLocation, insertLocation, insertContactLocation } = require('../lib/db')
 const { findByPostcode, findByName } = require('../lib/location')
+const { areasIntersectBox, areasIntersectPoint } = require('../lib/area')
 const { point, bbox } = require('../lib/proj')
 
 const errorMessages = {
@@ -32,6 +34,8 @@ class LocationModel extends BaseModel {
   constructor (data, err) {
     super(data, err, {
       location: errorMessages.location
+    }, {
+      pageHeading: 'Search for a location'
     })
   }
 }
@@ -128,9 +132,29 @@ const addressHandler = async (request, h) => {
   const { uprn: id, address: name } = addr
   const [x, y] = point(addr.x, addr.y)
 
-  request.yar.set('location', { id, name, x, y })
+  const result = await areasIntersectPoint(x, y)
 
-  return h.redirect('/add-location')
+  if (!result.exists) {
+    return h.view('no-target-areas', new BaseModel({ name }))
+  }
+
+  const auth = request.auth
+  if (auth.isAuthenticated) {
+    const { contact } = auth.credentials
+    let location = await findLocation(id)
+
+    if (!location) {
+      location = await insertLocation(id, name, x, y)
+    }
+
+    await insertContactLocation(contact.id, location.id)
+  } else {
+    const locations = request.yar.get('locations') || []
+    locations.unshift({ id, name, x, y })
+    request.yar.set('locations', locations)
+  }
+
+  return h.redirect('/locations')
 }
 
 const placeHandler = async (request, h) => {
@@ -141,9 +165,29 @@ const placeHandler = async (request, h) => {
   const [x, y] = point(addr.x, addr.y)
   const [xmin, ymin, xmax, ymax] = bbox(addr.xmin, addr.ymin, addr.xmax, addr.ymax)
 
-  request.yar.set('location', { id, name, x, y, xmin, ymin, xmax, ymax })
+  const result = await areasIntersectBox(xmin, ymin, xmax, ymax)
 
-  return h.redirect('/add-location')
+  if (!result.exists) {
+    return h.view('no-target-areas', new BaseModel({ name }))
+  }
+
+  const auth = request.auth
+  if (auth.isAuthenticated) {
+    const { contact } = auth.credentials
+    let location = await findLocation(id)
+
+    if (!location) {
+      location = await insertLocation(id, name, x, y, xmin, ymin, xmax, ymax)
+    }
+
+    await insertContactLocation(contact.id, location.id)
+  } else {
+    const locations = request.yar.get('locations') || []
+    locations.unshift({ id, name, x, y, xmin, ymin, xmax, ymax })
+    request.yar.set('locations', locations)
+  }
+
+  return h.redirect('/locations')
 }
 
 const addressFailAction = (request, h, err) => {
@@ -167,6 +211,11 @@ module.exports = [
     path: '/find-location',
     handler: (request, h) => {
       return h.view('find-location', new LocationModel())
+    },
+    options: {
+      auth: {
+        mode: 'try'
+      }
     }
   },
   {
@@ -184,6 +233,9 @@ module.exports = [
       }
     },
     options: {
+      auth: {
+        mode: 'try'
+      },
       validate: {
         payload: joi.object({
           _form: joi.string().allow('location', 'address', 'place').required()

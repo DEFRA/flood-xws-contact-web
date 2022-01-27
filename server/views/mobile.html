@@ -3,10 +3,10 @@
 {% block form %}
 {{
   govukInput({
-    id: "telephone",
-    name: "telephone",
+    id: "mobile",
+    name: "mobile",
     label: {
-      text: "What is your telephone number?",
+      text: "What is your mobile number?",
       classes: "govuk-label--l",
       isPageHeading: true
     },
@@ -21,8 +21,8 @@
     attributes: {
       spellcheck: "false"
     },
-    value: data.telephone,
-    errorMessage: errors.telephone
+    value: data.mobile,
+    errorMessage: errors.mobile
   }) 
 }}
 {% endblock %}

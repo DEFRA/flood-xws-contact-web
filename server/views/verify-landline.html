@@ -6,13 +6,13 @@
     id: "token",
     name: "token",
     label: {
-      text: "Enter your code",
+      text: "Enter the code we have sent you",
       classes: "govuk-label--l",
       isPageHeading: true
     },
     hint: {
       html: "
-        We have sent a 6 digit code to " + data.raw + " by " + data.deliveryMethod + ".<br>
+        We have sent a 6 digit code to " + data.landline + ".<br>
         It can take up to 5 minutes for your code to arrive.
       "
     },
@@ -27,8 +27,4 @@
     errorMessage: errors.token
   }) 
 }}
-{% endblock %}
-
-{% block afterForm %}
-{% include "partials/floodline.html" %}
 {% endblock %}

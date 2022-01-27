@@ -9,6 +9,7 @@ totp.options = { step: 10 * 60 } // seconds
  */
 function generateTOTP (secret) {
   const token = totp.generate(secret)
+  console.log('Generated TOTP for', secret, token)
   return token
 }
 
@@ -19,6 +20,7 @@ function generateTOTP (secret) {
  */
 function verifyTOTP (token, secret) {
   const isValid = totp.check(token, secret)
+  console.log('Verified TOTP for', secret, token, isValid)
   return isValid
 }
 
