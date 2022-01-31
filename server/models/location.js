@@ -9,7 +9,7 @@ const LOCATION_MESSAGES = {
 }
 
 const schema = joi.object().keys({
-  [LOCATION_KEY]: joi.string().label(LOCATION_LABEL).required().messages(LOCATION_MESSAGES)
+  [LOCATION_KEY]: joi.string().label(LOCATION_LABEL).trim().required().messages(LOCATION_MESSAGES)
 }).messages(baseMessages).required()
 
 class ViewModel extends BaseViewModel {

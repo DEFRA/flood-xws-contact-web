@@ -1,28 +1,5 @@
 {% extends "form.html" %}
 
 {% block form %}
-{{
-  govukInput({
-    id: "email",
-    name: "email",
-    label: {
-      text: "What is your email address?",
-      classes: "govuk-label--l",
-      isPageHeading: true
-    },
-    hint: {
-      html: "
-        You will need access to the email, as we will send you a code.
-      "
-    },
-    classes: "govuk-input--width-20",
-    type: "email",
-    autocomplete: "email",
-    attributes: {
-      spellcheck: "false"
-    },
-    value: data.email,
-    errorMessage: errors.email
-  })
-}}
+{{ govukInput(fields.email) }}
 {% endblock %}
