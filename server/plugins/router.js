@@ -9,7 +9,7 @@ const routes = [].concat(
   require('../routes/consent-email'),
   require('../routes/consent-mobile'),
   require('../routes/consent-landline'),
-  require('../routes/find-location'),
+  require('../routes/location'),
   require('../routes/locations'),
   require('../routes/england-only'),
   require('../routes/account'),

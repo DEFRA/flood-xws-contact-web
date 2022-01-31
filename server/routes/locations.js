@@ -29,7 +29,7 @@ module.exports = [
         locations = request.yar.get('locations')
 
         if (!locations) {
-          return h.redirect('/find-location')
+          return h.redirect('/location')
         }
 
         severity = request.yar.get('severity')
@@ -75,7 +75,7 @@ module.exports = [
           const locations = request.yar.get('locations')
 
           if (!locations) {
-            return h.redirect('/find-location')
+            return h.redirect('/location')
           }
 
           const errors = getMappedErrors(err, errorMessages)

@@ -1,6 +1,5 @@
 const joi = require('joi')
 const BaseModel = require('flood-xws-common/view/model')
-const { getMappedErrors } = require('flood-xws-common/view/errors')
 const { postcodeRegex } = require('../lib/postcode')
 const { redirectToCountry } = require('../lib/england-only')
 const { findLocation, insertLocation, insertContactLocation } = require('../lib/db')
@@ -8,81 +7,9 @@ const { findByPostcode, findByName } = require('../lib/location')
 const { areasIntersectBox, areasIntersectPoint } = require('../lib/area')
 const { point, bbox } = require('../lib/proj')
 
-const errorMessages = {
-  location: 'Enter a place name or postcode in England',
-  address: 'Select an address',
-  place: 'Select a place name'
-}
-
-const locationSchema = {
-  location: joi.string().required()
-}
-
-const addressSchema = joi.object().keys({
-  address: joi.string().required(),
-  addresses: joi.string().required(),
-  postcode: joi.string().trim().regex(postcodeRegex).required()
-})
-
-const placeSchema = joi.object().keys({
-  place: joi.string().required(),
-  places: joi.string().required(),
-  name: joi.string().required()
-})
-
-class LocationModel extends BaseModel {
-  constructor (data, err) {
-    super(data, err, {
-      location: errorMessages.location
-    }, {
-      pageHeading: 'Search for a location'
-    })
-  }
-}
-
-class AddressModel extends BaseModel {
-  constructor (data, err) {
-    super(data, err, {
-      address: errorMessages.address
-    })
-
-    const { addresses } = this.data
-    const defaultOption = {
-      text: addresses.length === 1
-        ? '1 address found'
-        : `${addresses.length} addresses found`
-    }
-
-    const items = [defaultOption].concat(addresses.map(addr => ({
-      text: addr.address,
-      value: addr.uprn
-    })))
-
-    this.items = items
-  }
-}
-
-class PlaceModel extends BaseModel {
-  constructor (data, err) {
-    super(data, err, {
-      place: errorMessages.place
-    })
-
-    const { places } = this.data
-    const defaultOption = {
-      text: places.length === 1
-        ? '1 place found'
-        : `${places.length} places found`
-    }
-
-    const items = [defaultOption].concat(places.map(addr => ({
-      text: [addr.name, addr.county, addr.district, addr.postcodeDistrict].filter(p => p).join(', '),
-      value: addr.id
-    })))
-
-    this.items = items
-  }
-}
+const { ViewModel: LocationModel, schema: locationSchema } = require('../models/location')
+const { ViewModel: PlaceModel, schema: placeSchema } = require('../models/place')
+const { ViewModel: AddressModel, schema: addressSchema } = require('../models/address')
 
 const locationHandler = async (request, h) => {
   const { location } = request.payload
@@ -98,37 +25,35 @@ const locationHandler = async (request, h) => {
     const postcode = location
     const addresses = await findByPostcode(postcode)
 
-    if (!addresses || !addresses.length) {
-      return h.view('address', new AddressModel({ postcode }))
-    }
+    request.yar.set('addresses', addresses)
 
-    return h.view('address', new AddressModel({ postcode, addresses }))
+    return h.view('address', new AddressModel({ postcode }, null, addresses))
   } else {
     const name = location
     const places = await findByName(name)
     const englishPlaces = places.filter(place => place.country === 'England')
 
-    if (!englishPlaces.length) {
-      if (places.length) {
-        // We have addresses but none in England
-        const firstPlaceCountry = places[0].country
-        const countries = {
-          Scotland: 'scotland',
-          Wales: 'wales'
-        }
-
-        return redirectToCountry(h, location, countries[firstPlaceCountry])
+    if (places.length && !englishPlaces.length) {
+      // We have addresses but none in England
+      const firstPlaceCountry = places[0].country
+      const countries = {
+        Scotland: 'scotland',
+        Wales: 'wales'
       }
+
+      return redirectToCountry(h, location, countries[firstPlaceCountry])
     }
 
-    return h.view('place', new PlaceModel({ name, places: englishPlaces }))
+    request.yar.set('places', englishPlaces)
+
+    return h.view('place', new PlaceModel({ name }, null, englishPlaces))
   }
 }
 
 const addressHandler = async (request, h) => {
   const { address } = request.payload
-  const addresses = JSON.parse(request.payload.addresses)
-  const addr = addresses.find(a => a.uprn === address)
+  const addresses = request.yar.get('addresses', true)
+  const addr = addresses[address]
   const { uprn: id, address: name } = addr
   const [x, y] = point(addr.x, addr.y)
 
@@ -158,12 +83,11 @@ const addressHandler = async (request, h) => {
 }
 
 const placeHandler = async (request, h) => {
-  const { place } = request.payload
-  const places = JSON.parse(request.payload.places)
-  const addr = places.find(a => a.id === place)
-  const { id, name } = addr
-  const [x, y] = point(addr.x, addr.y)
-  const [xmin, ymin, xmax, ymax] = bbox(addr.xmin, addr.ymin, addr.xmax, addr.ymax)
+  const places = request.yar.get('places', true)
+  const place = places[request.payload.place]
+  const { id, name } = place
+  const [x, y] = point(place.x, place.y)
+  const [xmin, ymin, xmax, ymax] = bbox(place.xmin, place.ymin, place.xmax, place.ymax)
 
   const result = await areasIntersectBox(xmin, ymin, xmax, ymax)
 
@@ -192,25 +116,24 @@ const placeHandler = async (request, h) => {
 
 const addressFailAction = (request, h, err) => {
   const { postcode } = request.payload
-  const addresses = JSON.parse(request.payload.addresses)
-  const errors = getMappedErrors(err, errorMessages)
+  const addresses = request.yar.get('addresses')
 
-  return h.view('address', new AddressModel({ postcode, addresses }, errors)).takeover()
+  return h.view('address', new AddressModel({ postcode }, err, addresses)).takeover()
 }
 
 const placeFailAction = (request, h, err) => {
   const { name } = request.payload
-  const places = JSON.parse(request.payload.places)
-  const errors = getMappedErrors(err, errorMessages)
-  return h.view('place', new PlaceModel({ name, places }, errors)).takeover()
+  const places = request.yar.get('places')
+
+  return h.view('place', new PlaceModel({ name }, err, places)).takeover()
 }
 
 module.exports = [
   {
     method: 'GET',
-    path: '/find-location',
+    path: '/location',
     handler: (request, h) => {
-      return h.view('find-location', new LocationModel())
+      return h.view('location', new LocationModel())
     },
     options: {
       auth: {
@@ -220,7 +143,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/find-location',
+    path: '/location',
     handler: async (request, h) => {
       const form = request.payload._form
 
@@ -229,7 +152,7 @@ module.exports = [
         case 'address': return addressHandler(request, h)
         case 'place': return placeHandler(request, h)
         default:
-          return h.redirect('/find-location')
+          return h.redirect('/location')
       }
     },
     options: {
@@ -249,8 +172,7 @@ module.exports = [
             case 'address': return addressFailAction(request, h, err)
             case 'place': return placeFailAction(request, h, err)
             default: {
-              const errors = getMappedErrors(err, errorMessages)
-              return h.view('find-location', new LocationModel(request.payload, errors)).takeover()
+              return h.view('location', new LocationModel(request.payload, err)).takeover()
             }
           }
         }

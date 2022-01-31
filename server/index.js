@@ -14,13 +14,19 @@ async function createServer () {
       auth: {
         mode: 'required'
       },
+      security: true,
       validate: {
         options: {
           abortEarly: false,
-          stripUnknown: true
+          stripUnknown: true,
+          errors: {
+            wrap: {
+              label: false,
+              array: false
+            }
+          }
         }
-      },
-      security: true
+      }
     },
     router: {
       stripTrailingSlash: true
