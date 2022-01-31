@@ -76,13 +76,13 @@ module.exports = [
 
         if (landlineState.attemptsRemaining === 1) {
           const errors = { token: errorMessages.token.lastAttempt }
-          const model = new Model({ ...payload, telephone: landline }, errors)
+          const model = new Model({ ...payload, landline }, errors)
 
           return h.view('verify-landline', model).takeover()
         }
 
         const errors = { token: errorMessages.token.incorrect }
-        const model = new Model({ ...payload, telephone: landline }, errors)
+        const model = new Model({ ...payload, landline }, errors)
 
         return h.view('verify-landline', model).takeover()
       }

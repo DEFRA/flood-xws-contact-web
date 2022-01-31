@@ -17,6 +17,8 @@ const schema = joi.object().keys({
     url: joi.string().uri().required()
   }).required(),
   httpTimeoutMs: joi.number().required().min(0).max(30000),
+  pinpointApplicationId: joi.string().required(),
+  pinpointFromAddress: joi.string().required(),
   notify: joi.object().keys({
     apiKey: joi.string().required(),
     templates: joi.object().keys({
@@ -53,6 +55,8 @@ const config = {
     key: process.env.OS_API_KEY
   },
   httpTimeoutMs: process.env.HTTP_TIMEOUT_MS,
+  pinpointApplicationId: process.env.PINPOINT_APPLICATION_ID,
+  pinpointFromAddress: process.env.PINPOINT_FROM_ADDRESS,
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,
     templates: {

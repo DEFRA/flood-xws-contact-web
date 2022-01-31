@@ -28,6 +28,7 @@
     "@hapi/vision": "6.1.0",
     "@hapi/wreck": "17.1.0",
     "@hapi/yar": "10.1.1",
+    "aws-sdk": "2.1065.0",
     "blipp": "4.0.2",
     "dotenv": "14.2.0",
     "flood-xws-common": "github:DEFRA/flood-xws-common",
