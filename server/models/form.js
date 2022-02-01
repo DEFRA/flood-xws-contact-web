@@ -1,39 +1,17 @@
 const config = require('../config')
 
-function mapErrors (err) {
-  const errors = {}
-  const errorList = []
-
-  if (err && Array.isArray(err.details)) {
-    err.details.forEach(error => {
-      const path = error.path[0]
-      const text = error.message
-      const type = error.type
-
-      errors[path] = { text, type }
-      errorList.push({ text, type, path, href: `#${path}` })
-    })
-  }
-
-  return [
-    errors,
-    errorList
-  ]
-}
-
 const baseMessages = {
   'string.max': '{{#label}} must be {{#limit}} characters or fewer'
 }
 
 class BaseViewModel {
-  constructor (data = {}, err, { pageHeading, path, previousPath }) {
-    const [errors, errorList] = mapErrors(err)
+  constructor (data = {}, err = new Errors(), { pageHeading, path, previousPath }) {
     this.data = data
-    this.errors = errors
-    this.errorList = errorList
+    this.errorList = err
+    this.errors = err.toMap()
     this.fields = {}
     this.pageHeading = pageHeading
-    this.pageTitle = `${errorList.length ? 'Error: ' : ''}${pageHeading} - ${config.defaultPageTitle}`
+    this.pageTitle = `${this.errorList.length ? 'Error: ' : ''}${pageHeading} - ${config.defaultPageTitle}`
     this.path = path
     this.previousPath = previousPath
   }
@@ -43,4 +21,30 @@ class BaseViewModel {
   }
 }
 
-module.exports = { mapErrors, baseMessages, BaseViewModel }
+class Errors extends Array {
+  toMap () {
+    const map = Object.assign({}, ...this.map(e => {
+      return { [e.key]: e }
+    }))
+    return map
+  }
+
+  static fromJoi (joiErr) {
+    return new Errors(...joiErr.details.map(detail => {
+      const key = detail.path[0]
+      const text = detail.message
+
+      return new ErrorDefinition(key, text)
+    }))
+  }
+}
+
+class ErrorDefinition {
+  constructor (key, text) {
+    this.key = key
+    this.text = text
+    this.href = `#${key}`
+  }
+}
+
+module.exports = { baseMessages, BaseViewModel, Errors, ErrorDefinition }

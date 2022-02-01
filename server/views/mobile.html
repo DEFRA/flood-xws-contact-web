@@ -1,28 +1,5 @@
 {% extends "form.html" %}
 
 {% block form %}
-{{
-  govukInput({
-    id: "mobile",
-    name: "mobile",
-    label: {
-      text: "What is your mobile number?",
-      classes: "govuk-label--l",
-      isPageHeading: true
-    },
-    hint: {
-      html: "
-        You will need access to this contact, as we will send you a code.
-      "
-    },
-    classes: "govuk-input--width-20",
-    type: "tel",
-    autocomplete: "tel",
-    attributes: {
-      spellcheck: "false"
-    },
-    value: data.mobile,
-    errorMessage: errors.mobile
-  }) 
-}}
+{{ govukInput(fields.mobile) }}
 {% endblock %}
