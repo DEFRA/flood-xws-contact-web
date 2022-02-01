@@ -86,14 +86,14 @@ module.exports = [
       validate: {
         payload: schema,
         failAction: (request, h, err) => {
-          const landline = request.yar.get('landline')
+          const landlineState = request.yar.get('landline')
 
-          if (!landline) {
+          if (!landlineState) {
             return h.redirect('/landline')
           }
 
           const { payload } = request
-          const { raw } = landline
+          const { raw } = landlineState
           const errors = Errors.fromJoi(err)
 
           return h.view('verify-landline', new ViewModel({ ...payload, raw }, errors)).takeover()

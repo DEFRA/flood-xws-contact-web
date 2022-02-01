@@ -1,28 +1,8 @@
-const joi = require('joi')
-const BaseModel = require('flood-xws-common/view/model')
-const { getMappedErrors } = require('flood-xws-common/view/errors')
 const config = require('../config')
+const { Errors } = require('../models/form')
+const { ViewModel, schema, customErrors } = require('../models/verify-mobile')
 const { verifyTOTP } = require('../lib/otp')
 const { updateContactMobile } = require('../lib/db')
-
-const errorMessages = {
-  token: {
-    'string.empty': 'Enter a valid code',
-    'string.length': 'Enter a valid 6 digit code',
-    incorrect: 'The code you entered is incorrect',
-    lastAttempt: 'The code you entered is incorrect - you have 1 attempt remaining'
-  }
-}
-
-const schema = {
-  token: joi.string().length(6).required()
-}
-
-class Model extends BaseModel {
-  constructor (data, err) {
-    super(data, err, errorMessages)
-  }
-}
 
 module.exports = [
   {
@@ -42,7 +22,7 @@ module.exports = [
 
       const { raw } = mobileState
 
-      return h.view('verify-mobile', new Model({ mobile: raw, token }))
+      return h.view('verify-mobile', new ViewModel({ raw, token }))
     }
   },
   {
@@ -59,7 +39,7 @@ module.exports = [
       const { payload } = request
       const { token } = payload
       const sessionId = request.yar.id
-      const { value: mobile, salt } = mobileState
+      const { value: mobile, salt, raw } = mobileState
 
       const secret = `${sessionId}_${mobile}_${salt}`
       const isValid = verifyTOTP(token, secret)
@@ -75,14 +55,14 @@ module.exports = [
         request.yar.set('mobile', mobileState)
 
         if (mobileState.attemptsRemaining === 1) {
-          const errors = { token: errorMessages.token.lastAttempt }
-          const model = new Model({ ...payload, mobile }, errors)
+          const errors = new Errors(customErrors.lastAttempt)
+          const model = new ViewModel({ ...payload, raw }, errors)
 
           return h.view('verify-mobile', model).takeover()
         }
 
-        const errors = { token: errorMessages.token.incorrect }
-        const model = new Model({ ...payload, mobile }, errors)
+        const errors = new Errors(customErrors.incorrect)
+        const model = new ViewModel({ ...payload, raw }, errors)
 
         return h.view('verify-mobile', model).takeover()
       }
@@ -104,18 +84,19 @@ module.exports = [
     },
     options: {
       validate: {
-        payload: joi.object().keys(schema),
+        payload: schema,
         failAction: (request, h, err) => {
-          const mobile = request.yar.get('mobile')
+          const mobileState = request.yar.get('mobile')
 
-          if (!mobile) {
+          if (!mobileState) {
             return h.redirect('/mobile')
           }
 
           const { payload } = request
-          const { raw } = mobile
-          const errors = getMappedErrors(err, errorMessages)
-          return h.view('verify-mobile', new Model({ ...payload, raw }, errors)).takeover()
+          const { raw } = mobileState
+          const errors = Errors.fromJoi(err)
+
+          return h.view('verify-mobile', new ViewModel({ ...payload, raw }, errors)).takeover()
         }
       }
     }
