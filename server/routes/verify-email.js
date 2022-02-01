@@ -121,14 +121,14 @@ module.exports = [
       validate: {
         payload: schema,
         failAction: (request, h, err) => {
-          const email = request.yar.get('email')
+          const emailState = request.yar.get('email')
 
-          if (!email) {
+          if (!emailState) {
             return h.redirect('/email')
           }
 
           const { payload } = request
-          const { raw } = email
+          const { raw } = emailState
 
           return h.view('verify-email', new ViewModel({ ...payload, raw }, Errors.fromJoi(err))).takeover()
         }
