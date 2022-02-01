@@ -24,36 +24,7 @@
 
 {% block form %}
   <hr class="govuk-section-break govuk-section-break--xl">
-  {{ govukRadios({
-    idPrefix: "severity",
-    name: "severity",
-    fieldset: {
-      legend: {
-        text: "Which flood warnings do you need?",
-        isPageHeading: false,
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    items: [
-      {
-        value: "warnings-only",
-        text: "Warnings and severe warnings",
-        checked: data.severity === "warnings-only",
-        hint: {
-          text: "Flooding to property or a danger to life is expected in this location."
-        }
-      },
-      {
-        value: "all",
-        text: "All flood warnings including minor warnings",
-        checked: data.severity === "all",
-        hint: {
-          text: "These may be shallow flooding of roads, fields and footpaths that may not be near me but may connect to waterways in this location."
-        }
-      }
-    ],
-    errorMessage: errors.severity
-  }) }}
+  {{ govukRadios(fields.severity) }}
 {% endblock %}
 
 

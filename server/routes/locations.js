@@ -1,17 +1,6 @@
-const joi = require('joi')
-const BaseModel = require('flood-xws-common/view/model')
-const { getMappedErrors } = require('flood-xws-common/view/errors')
+const { Errors } = require('../models/form')
+const { ViewModel, schema } = require('../models/locations')
 const { getContactLocations, updateContactReceiveMessages } = require('../lib/db')
-
-const errorMessages = {
-  severity: 'Choose which flood warnings do you need'
-}
-
-class Model extends BaseModel {
-  constructor (data, err) {
-    super(data, err, errorMessages)
-  }
-}
 
 module.exports = [
   {
@@ -35,7 +24,7 @@ module.exports = [
         severity = request.yar.get('severity')
       }
 
-      return h.view('locations', new Model({ severity, locations }))
+      return h.view('locations', new ViewModel({ severity, locations }))
     },
     options: {
       auth: {
@@ -68,9 +57,7 @@ module.exports = [
         mode: 'try'
       },
       validate: {
-        payload: joi.object().keys({
-          severity: joi.string().valid('warnings-only', 'all').required()
-        }),
+        payload: schema,
         failAction: (request, h, err) => {
           const locations = request.yar.get('locations')
 
@@ -78,8 +65,7 @@ module.exports = [
             return h.redirect('/location')
           }
 
-          const errors = getMappedErrors(err, errorMessages)
-          return h.view('locations', new Model({ locations, ...request.payload }, errors)).takeover()
+          return h.view('locations', new ViewModel({ locations, ...request.payload }, Errors.fromJoi(err))).takeover()
         }
       }
     }
