@@ -1,30 +1,15 @@
-const joi = require('joi')
-const BaseModel = require('flood-xws-common/view/model')
-const { getMappedErrors } = require('flood-xws-common/view/errors')
+const { Errors } = require('../models/form')
+const { ViewModel, schema } = require('../models/consent-email')
 const { updateContactEmailActive } = require('../lib/db')
-
-const errorMessages = {
-  consent: {
-    '*': 'Choose an option'
-  }
-}
-
-const schema = {
-  consent: joi.boolean().required()
-}
-
-class Model extends BaseModel {
-  constructor (data, err) {
-    super(data, err, errorMessages)
-  }
-}
 
 module.exports = [
   {
     method: 'GET',
     path: '/consent-email',
     handler: (request, h) => {
-      return h.view('consent-email', new Model())
+      const { contact } = request.auth.credentials
+
+      return h.view('consent-email', new ViewModel({ consent: contact.email_active }))
     }
   },
   {
@@ -47,11 +32,12 @@ module.exports = [
     },
     options: {
       validate: {
-        payload: joi.object().keys(schema),
+        payload: schema,
         failAction: (request, h, err) => {
           const { payload } = request
-          const errors = getMappedErrors(err, errorMessages)
-          return h.view('consent-email', new Model({ ...payload }, errors)).takeover()
+          const errors = Errors.fromJoi(err)
+
+          return h.view('consent-email', new ViewModel({ ...payload }, errors)).takeover()
         }
       }
     }
