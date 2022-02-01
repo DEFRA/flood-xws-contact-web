@@ -1,30 +1,15 @@
-const joi = require('joi')
-const BaseModel = require('flood-xws-common/view/model')
-const { getMappedErrors } = require('flood-xws-common/view/errors')
+const { Errors } = require('../models/form')
+const { ViewModel, schema } = require('../models/consent-landline')
 const { updateContactLandlineActive } = require('../lib/db')
-
-const errorMessages = {
-  consent: {
-    '*': 'Choose an option'
-  }
-}
-
-const schema = {
-  consent: joi.boolean().required()
-}
-
-class Model extends BaseModel {
-  constructor (data, err) {
-    super(data, err, errorMessages)
-  }
-}
 
 module.exports = [
   {
     method: 'GET',
     path: '/consent-landline',
     handler: (request, h) => {
-      return h.view('consent-landline', new Model())
+      const { contact } = request.auth.credentials
+
+      return h.view('consent-landline', new ViewModel({ consent: contact.landline_active }))
     }
   },
   {
@@ -47,11 +32,12 @@ module.exports = [
     },
     options: {
       validate: {
-        payload: joi.object().keys(schema),
+        payload: schema,
         failAction: (request, h, err) => {
           const { payload } = request
-          const errors = getMappedErrors(err, errorMessages)
-          return h.view('consent-landline', new Model({ ...payload }, errors)).takeover()
+          const errors = Errors.fromJoi(err)
+
+          return h.view('consent-landline', new ViewModel({ ...payload }, errors)).takeover()
         }
       }
     }
