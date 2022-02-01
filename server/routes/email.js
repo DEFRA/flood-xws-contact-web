@@ -2,6 +2,7 @@ const config = require('../config')
 const { generateTOTP } = require('../lib/otp')
 const { sendEmailToken } = require('../lib/email')
 const { ViewModel, schema } = require('../models/email')
+const { Errors } = require('../models/form')
 
 module.exports = [
   {
@@ -55,7 +56,7 @@ module.exports = [
       validate: {
         payload: schema,
         failAction: (request, h, err) => {
-          return h.view('email', new ViewModel(request.payload, err)).takeover()
+          return h.view('email', new ViewModel(request.payload, Errors.fromJoi(err))).takeover()
         }
       }
     }
