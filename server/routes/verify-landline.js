@@ -1,28 +1,8 @@
-const joi = require('joi')
-const BaseModel = require('flood-xws-common/view/model')
-const { getMappedErrors } = require('flood-xws-common/view/errors')
 const config = require('../config')
+const { Errors } = require('../models/form')
+const { ViewModel, schema, customErrors } = require('../models/verify-landline')
 const { verifyTOTP } = require('../lib/otp')
 const { updateContactLandline } = require('../lib/db')
-
-const errorMessages = {
-  token: {
-    'string.empty': 'Enter a valid code',
-    'string.length': 'Enter a valid 6 digit code',
-    incorrect: 'The code you entered is incorrect',
-    lastAttempt: 'The code you entered is incorrect - you have 1 attempt remaining'
-  }
-}
-
-const schema = {
-  token: joi.string().length(6).required()
-}
-
-class Model extends BaseModel {
-  constructor (data, err) {
-    super(data, err, errorMessages)
-  }
-}
 
 module.exports = [
   {
@@ -42,7 +22,7 @@ module.exports = [
 
       const { raw } = landlineState
 
-      return h.view('verify-landline', new Model({ raw, token }))
+      return h.view('verify-landline', new ViewModel({ raw, token }))
     }
   },
   {
@@ -59,7 +39,7 @@ module.exports = [
       const { payload } = request
       const { token } = payload
       const sessionId = request.yar.id
-      const { value: landline, salt } = landlineState
+      const { value: landline, salt, raw } = landlineState
 
       const secret = `${sessionId}_${landline}_${salt}`
       const isValid = verifyTOTP(token, secret)
@@ -75,14 +55,14 @@ module.exports = [
         request.yar.set('landline', landlineState)
 
         if (landlineState.attemptsRemaining === 1) {
-          const errors = { token: errorMessages.token.lastAttempt }
-          const model = new Model({ ...payload, landline }, errors)
+          const errors = new Errors(customErrors.lastAttempt)
+          const model = new ViewModel({ ...payload, raw }, errors)
 
           return h.view('verify-landline', model).takeover()
         }
 
-        const errors = { token: errorMessages.token.incorrect }
-        const model = new Model({ ...payload, landline }, errors)
+        const errors = new Errors(customErrors.incorrect)
+        const model = new ViewModel({ ...payload, raw }, errors)
 
         return h.view('verify-landline', model).takeover()
       }
@@ -104,7 +84,7 @@ module.exports = [
     },
     options: {
       validate: {
-        payload: joi.object().keys(schema),
+        payload: schema,
         failAction: (request, h, err) => {
           const landline = request.yar.get('landline')
 
@@ -114,8 +94,9 @@ module.exports = [
 
           const { payload } = request
           const { raw } = landline
-          const errors = getMappedErrors(err, errorMessages)
-          return h.view('verify-landline', new Model({ ...payload, raw }, errors)).takeover()
+          const errors = Errors.fromJoi(err)
+
+          return h.view('verify-landline', new ViewModel({ ...payload, raw }, errors)).takeover()
         }
       }
     }

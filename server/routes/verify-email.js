@@ -129,8 +129,9 @@ module.exports = [
 
           const { payload } = request
           const { raw } = emailState
+          const errors = Errors.fromJoi(err)
 
-          return h.view('verify-email', new ViewModel({ ...payload, raw }, Errors.fromJoi(err))).takeover()
+          return h.view('verify-email', new ViewModel({ ...payload, raw }, errors)).takeover()
         }
       }
     }
