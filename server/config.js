@@ -16,7 +16,7 @@ const schema = joi.object().keys({
     key: joi.string().required(),
     url: joi.string().uri().required()
   }).required(),
-  httpTimeoutMs: joi.number().required().min(0).max(30000),
+  httpTimeoutMs: joi.number().min(0).max(30000).required(),
   pinpointApplicationId: joi.string().required(),
   pinpointFromAddress: joi.string().required(),
   notify: joi.object().keys({

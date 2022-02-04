@@ -1,12 +1,35 @@
-# xws-contact-web
+# flood-xws-contact-web
+
 Public facing "Get flood warnings" registration website
 
 # Environment variables
 
-| name     | description      | required | default |            valid            | notes |
-|----------|------------------|:--------:|---------|:---------------------------:|-------|
-| NODE_ENV | Node environment |    no    |         | sandbox,test,production     |       |
-| PORT     | Port number      |    no    |         |                             |       |
+| name                         | description                    | required   | valid                         |
+| --------------------:        | --------------------------:    | :--------: | :---------------------------: |
+| ENV                          | Deployment environment         | yes        | sandbox,test,production       |
+| HOST                         | Hostname                       | yes        |                               |
+| PORT                         | Port number                    | yes        |                               |
+| DATABASE_URL                 | PG Database Url                | yes        |                               |
+| DATABASE_SSL                 | PG Database SSL flag           | no         | true/false                    |
+| COOKIE_PASSWORD              |                                | yes        |                               |
+| COOKIE_IS_SECURE             |                                | yes        |                               |
+| HTTP_TIMEOUT_MS              |                                | yes        |                               |
+| PHASE_BANNER_TAG             | Phase banner tag               | yes        |                               |
+| PHASE_BANNER_HTML            | Phase banner tag html          | yes        |                               |
+| OS_API_URL                   | Ordnance survey api URL        | yes        |                               |
+| OS_API_KEY                   | Ordnance survey api key        | yes        |                               |
+| NOTIFY_API_KEY               | GOV.UK Notify Api Key          | yes        |                               |
+| NOTIFY_TEMPLATE_SMS_TOKEN    | GOV.UK Notify SMS Token        | yes        |                               |
+| NOTIFY_TEMPLATE_EMAIL_TOKEN  | GOV.UK Notify Email Token      | yes        |                               |
+| TWILIO_ACCOUNT_ID            | Twilio account id              | yes        |                               |
+| TWILIO_AUTH_TOKEN            | Twilio auth token              | yes        |                               |
+| TWILIO_FROM_PHONE_NUMBER     | Twilio sender number           | yes        |                               |
+| CACHE_VIEWS                  | Cache view flag                | yes        | true/false                    |
+| LOG_LEVEL                    | Logging level                  | no         | "debug" (default) or "warn"   |
+| STORE_TOKEN_IN_STATE         | Testing flag to prefill OTP    | no         | true/false  (default)         |
+
+
+As per [12 Factor principles](https://12factor.net/config) application config is stored in environment variables (env vars). For ease of local development the service should have a `.env` file in its root folder. Starter `.env` files for local development for this service are held in the [xws config repo](https://github.com/DEFRA/flood-xws-config/tree/master/flood-xws-contact-web) repository.
 
 # Prerequisites
 
@@ -28,17 +51,9 @@ Check the server is running by pointing your browser to `http://localhost:3001`
 
 ## Deploying (GOV.UK PaaS)
 
-The first time you deploy to a PaaS space it will fail because it doesn't have the APP_CONFIG envar. To fix it, run one of these:
+`npm run deploy`
 
-`cf set-env xws-contact-web-sandbox APP_CONFIG sandbox`
-`cf set-env xws-contact-web-test APP_CONFIG test`
-`cf set-env xws-contact-web-production APP_CONFIG production`
-
-then one of
-
-`cf restage xws-contact-web-sandbox`
-`cf restage xws-contact-web-test`
-`cf restage xws-contact-web-production`
+And follow the instructions in the config repo on how to set environment vaiables in GOV.UK PaaS (CloudFoundry)
 
 ## License
 
