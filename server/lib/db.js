@@ -184,6 +184,33 @@ async function getContactLocations (contactId) {
   `, [contactId])
 }
 
+/**
+ * Get a single contact location for a given contact
+ *
+ * @param {string} contactId - The contact record Id
+ * @param {string} contactId - The contact location record Id
+ */
+async function getContactLocation (contactId, contactLocationId) {
+  return queryOne(`
+    select cl.id, cl.contact_id, cl.location_id, l.name
+    from xws_contact.contact_location cl
+    join xws_contact.location l on l.id = cl.location_id
+    where cl.id = $1 and cl.contact_id = $2 limit 1;
+  `, [contactLocationId, contactId])
+}
+
+/**
+ * Get a single contact location for a given contact
+ *
+ * @param {string} contactId - The contact record Id
+ * @param {string} contactId - The contact location record Id
+ */
+async function removeContactLocation (contactId, contactLocationId) {
+  return queryOne(`
+    delete from xws_contact.contact_location where id = $1 and contact_id = $2;
+  `, [contactLocationId, contactId])
+}
+
 module.exports = {
   pool,
   query,
@@ -198,6 +225,8 @@ module.exports = {
   updateContactEmailActive,
   updateContactReceiveMessages,
   insertLocation,
+  getContactLocation,
   getContactLocations,
-  insertContactLocation
+  insertContactLocation,
+  removeContactLocation
 }

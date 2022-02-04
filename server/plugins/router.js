@@ -11,6 +11,7 @@ const routes = [].concat(
   require('../routes/consent-landline'),
   require('../routes/location'),
   require('../routes/locations'),
+  require('../routes/confirm-remove'),
   require('../routes/england-only'),
   require('../routes/account'),
   require('../routes/status'),
