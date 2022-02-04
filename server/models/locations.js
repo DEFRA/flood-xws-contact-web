@@ -59,5 +59,7 @@ class ViewModel extends BaseViewModel {
 module.exports = {
   schema,
   ViewModel,
-  SEVERITY_KEY
+  SEVERITY_KEY,
+  SEVERITY_ITEMS,
+  SEVERITY_ITEM_LABELS
 }

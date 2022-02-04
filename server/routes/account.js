@@ -1,4 +1,5 @@
 const { getContactLocations } = require('../lib/db')
+const { SEVERITY_ITEMS, SEVERITY_ITEM_LABELS } = require('../models/locations')
 
 const formatYesNo = val => {
   switch (val) {
@@ -12,14 +13,9 @@ const formatYesNo = val => {
 }
 
 const formatReceiveMessages = val => {
-  switch (val) {
-    case 'warnings-only':
-      return 'Warnings only'
-    case 'all':
-      return 'All'
-    default:
-      return ''
-  }
+  return val
+    ? SEVERITY_ITEM_LABELS[SEVERITY_ITEMS.indexOf(val)]
+    : ''
 }
 
 module.exports = [
