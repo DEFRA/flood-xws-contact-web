@@ -59,7 +59,7 @@ const addressHandler = async (request, h) => {
   const result = await areasIntersectPoint(x, y)
 
   if (!result.exists) {
-    return h.view('no-target-areas', new AddressModel({ name }))
+    return h.view('no-target-areas', new LocationModel({ name }))
   }
 
   const auth = request.auth
