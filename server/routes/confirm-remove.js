@@ -19,7 +19,7 @@ module.exports = [
 
         return h.view('confirm-remove', new ViewModel(contactLocation))
       } else {
-        const locations = request.yar.get('locations')
+        const locations = request.yar.get('locations') || []
         const location = locations.find(l => l.id === id)
 
         if (!location) {
