@@ -5,7 +5,7 @@ Public facing "Get flood warnings" registration website
 # Environment variables
 
 | name                         | description                    | required   | valid                         |
-| --------------------:        | --------------------------:    | :--------: | :---------------------------: |
+| :--------------------------  | :----------------------------  | :--------: | :---------------------------: |
 | ENV                          | Deployment environment         | yes        | sandbox,test,production       |
 | HOST                         | Hostname                       | yes        |                               |
 | PORT                         | Port number                    | yes        |                               |
