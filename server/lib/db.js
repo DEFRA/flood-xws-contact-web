@@ -142,9 +142,6 @@ async function updateContactReceiveMessages (id, receiveMessages) {
  */
 async function insertLocation (ref, name, x, y, xmin, ymin, xmax, ymax) {
   const type = ref.startsWith('osgb') ? 'osgb' : 'uprn'
-  // const centroid = `ST_MakePoint(${x}, ${y})`
-  // const boundingBox = type === 'osgb' ? `ST_MakeEnvelope(${xmin}, ${ymin}, ${xmax}, ${ymax}])` : null
-  // const geom = type === 'osgb' ? boundingBox : centroid
 
   return queryOne(`
     insert into xws_contact.location(ref, type, name, geom, centroid, bounding_box)
@@ -168,6 +165,7 @@ async function insertContactLocation (contactId, locationId) {
   return queryOne(`
     insert into xws_contact.contact_location(contact_id, location_id)
     values($1, $2)
+    ON CONFLICT (contact_id, location_id) DO NOTHING
     returning *
   `, [contactId, locationId])
 }
@@ -186,49 +184,6 @@ async function getContactLocations (contactId) {
   `, [contactId])
 }
 
-// /**
-//  * Get a single location for a given contact
-//  *
-//  * @param {string} contactId - The contact record Id
-//  * @param {string} subscriptionId - The subscription record Id
-//  */
-// async function getSubscription (contactId, subscriptionId) {
-//   return queryOne(`
-//     select
-//       s.id, s.contact_id, s.location_id, s.wnlif, s.alerts, l.name,
-//       (select EXISTS (select ar.code from xws_area.area ar where ar.area_type_ref = 'fwa' and st_intersects(l.geom, ar.geom))) as "hasWarning"
-//     from xws_contact.subscription s
-//     join xws_contact.location l on l.id = s.location_id
-//     where s.id = $1 and s.contact_id = $2
-//   `, [subscriptionId, contactId])
-// }
-
-// /**
-//  * Remove a contact location link
-//  *
-//  * @param {number} contactId - The contact record Id
-//  * @param {number} locationId - The location record Id
-//  */
-// async function removeSubscription (contactId, locationId) {
-//   return queryOne(`
-//     delete from xws_contact.subscription where contact_id = $1 and location_id = $2
-//   `, [contactId, locationId])
-// }
-
-// /**
-//  * Remove a contact location link
-//  *
-//  * @param {number} contactId - The contact record Id
-//  * @param {number} locationId - The location record Id
-//  */
-// async function updateSubscription (contactId, subscriptionId, wnlif, alerts) {
-//   return query(`
-//     update xws_contact.subscription
-//     set wnlif = $3, alerts = $4
-//     where contact_id = $1 and id = $2
-//   `, [contactId, subscriptionId, wnlif, alerts])
-// }
-
 module.exports = {
   pool,
   query,
@@ -245,9 +200,4 @@ module.exports = {
   insertLocation,
   getContactLocations,
   insertContactLocation
-  // insertSubscription,
-  // getSubscription,
-  // getSubscriptions,
-  // removeSubscription,
-  // updateSubscription
 }
