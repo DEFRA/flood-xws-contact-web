@@ -33,9 +33,9 @@ module.exports = [
         ['Which flood warnings do you need?', formatReceiveMessages(contact.receive_messages), '/locations'],
         ['Get warnings by email?', formatYesNo(contact.email_active), '/consent-email'],
         ['Get warnings by text?', formatYesNo(contact.mobile_active), '/consent-mobile'],
-        ['Mobile number', contact.mobile, '/mobile'],
-        ['Get warnings by telephone call?', formatYesNo(contact.landline_active), '/consent-landline'],
-        ['Phone number', contact.landline, '/landline']
+        ['Mobile number', contact.mobile, '/mobile']
+        // ['Get warnings by telephone call?', formatYesNo(contact.landline_active), '/consent-landline'],
+        // ['Phone number', contact.landline, '/landline']
       ].map(item => ({
         key: { text: item[0] },
         value: typeof item[1] === 'string' ? { text: item[1] } : item[1],

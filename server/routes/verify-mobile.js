@@ -76,9 +76,7 @@ module.exports = [
 
       request.cookieAuth.set({ contact })
 
-      const next = contact.landline_active === null
-        ? '/consent-landline'
-        : '/account'
+      const next = '/account'
 
       return h.redirect(next)
     },
