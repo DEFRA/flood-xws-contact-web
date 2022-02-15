@@ -1,0 +1,17 @@
+{% extends "form.html" %}
+
+{% block beforeForm %}
+<h1 class="govuk-heading-l">{{ pageHeading }}</h1>
+{% endblock %}
+
+{% block form %}
+<div class="govuk-form-group">
+  <span class="govuk-label">Postcode</span>
+  <p class="govuk-body">
+    <strong id="postcode" style="text-transform: uppercase;">{{ data.postcode }}</strong>
+    <a href="/postcode" class="govuk-link">Change</a>
+  </p>
+</div>
+
+{{ govukSelect(fields.address) }}
+{% endblock %}

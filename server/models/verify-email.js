@@ -1,9 +1,9 @@
 const joi = require('joi')
 const { BaseViewModel, baseMessages, ErrorDefinition } = require('./form')
 
-const PAGE_HEADING = 'Enter the code we have sent you'
+const PAGE_HEADING = 'Check your email'
 const VERIFY_EMAIL_KEY = 'token'
-const VERIFY_EMAIL_LABEL = 'Token'
+const VERIFY_EMAIL_LABEL = 'Enter the code we have sent you'
 const VERIFY_EMAIL_MESSAGES = {
   'string.empty': 'Enter a valid code',
   'string.length': 'Enter a valid 6 digit code'
@@ -35,7 +35,7 @@ class ViewModel extends BaseViewModel {
         isPageHeading: true
       },
       hint: {
-        html: 'We have sent a 6 digit code to ' + this.data.raw + '.<br>It can take up to 5 minutes for your code to arrive.'
+        html: `To make sure we have the right email address we sent a code to ${this.data.raw}.`
       },
       classes: 'govuk-input--width-5',
       attributes: {

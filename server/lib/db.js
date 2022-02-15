@@ -22,6 +22,15 @@ async function findContact (value) {
 }
 
 /**
+ * Find a single contact by id
+ *
+ * @param {string} id - The contact id
+ */
+async function getContactById (id) {
+  return queryOne('select * from xws_contact.contact where id = $1 limit 1', [id])
+}
+
+/**
  * Find a single location by UPRN or OSGB ref
  *
  * @param {string} ref - The URPN or OSGB ref
@@ -216,6 +225,7 @@ module.exports = {
   query,
   queryOne,
   findContact,
+  getContactById,
   findLocation,
   insertContact,
   updateContactMobile,

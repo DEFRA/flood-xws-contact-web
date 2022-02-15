@@ -1,17 +1,16 @@
 {% extends "two-thirds.html" %}
 
 {% block twoThirds %}
-  <h1 class="govuk-heading-l">No current flood monitoring at: {{data.name}}</h1>
+  <h1 class="govuk-heading-l">No current flood monitoring at: {{ name }}</h1>
   <p>We do not monitor this location because it is at low risk of flooding from rivers, the sea or groundwater.</p>
   <p>It may still be affected by surface water flooding, which this service does not cover.</p>
   <p>You can:</p>
   <ul class="govuk-list govuk-list--bullet">
     <li><a href="https://www.gov.uk/check-long-term-flood-risk">check the long term flood risk for an area in England</a>, including surface water</li>
-    <!-- <li>continue to sign up for this address in case it becomes at risk in future</li> -->
   </ul>
 
   {{ govukButton({
-    text: "Try another search",
-    href: "/location"
+    text: "Try another address",
+    href: "/postcode"
   }) }}
 {% endblock %}

@@ -2,7 +2,7 @@ const config = require('../config')
 const { Errors } = require('../models/form')
 const { ViewModel, schema, customErrors } = require('../models/verify-mobile')
 const { verifyTOTP } = require('../lib/otp')
-const { updateContactMobile } = require('../lib/db')
+const { updateContactMobileActive, updateContactMobile } = require('../lib/db')
 
 module.exports = [
   {
@@ -33,7 +33,7 @@ module.exports = [
       const attemptsRemaining = mobileState?.attemptsRemaining
 
       if (!mobileState || !attemptsRemaining) {
-        return h.redirect('/mobile')
+        return h.redirect('/mob')
       }
 
       const { payload } = request
@@ -69,12 +69,12 @@ module.exports = [
 
       request.yar.clear('mobile')
 
-      const credentials = request.auth.credentials
+      const auth = request.auth
+      const { id } = auth.credentials
 
       // Update contact
-      const contact = await updateContactMobile(credentials.contact.id, mobile)
-
-      request.cookieAuth.set({ contact })
+      await updateContactMobileActive(id, true)
+      await updateContactMobile(id, mobile)
 
       const next = '/account'
 

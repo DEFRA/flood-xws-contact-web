@@ -32,9 +32,6 @@ module.exports = [
     options: {
       validate: {
         params: paramsSchema
-      },
-      auth: {
-        mode: 'try'
       }
     }
   },
@@ -58,9 +55,6 @@ module.exports = [
     options: {
       validate: {
         params: paramsSchema
-      },
-      auth: {
-        mode: 'try'
       }
     }
   }

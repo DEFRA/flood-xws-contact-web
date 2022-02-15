@@ -2,7 +2,7 @@ const config = require('../config')
 const { Errors } = require('../models/form')
 const { ViewModel, schema, customErrors } = require('../models/verify-email')
 const { verifyTOTP } = require('../lib/otp')
-const { findLocation, insertLocation, findContact, insertContact, updateContactReceiveMessages, insertContactLocation } = require('../lib/db')
+const { findLocation, insertLocation, findContact, insertContact, insertContactLocation } = require('../lib/db')
 
 module.exports = [
   {
@@ -80,33 +80,23 @@ module.exports = [
 
       if (!contact) {
         contact = await insertContact(email)
-
-        // Insert locations and severity from session (and remove)
-        const severity = request.yar.get('severity', true)
-        const locations = request.yar.get('locations', true)
-        request.yar.clear()
-
-        if (severity) {
-          contact = await updateContactReceiveMessages(contact.id, severity)
-        }
-
-        if (Array.isArray(locations)) {
-          for await (const location of locations) {
-            const ref = location.id
-            let locationRecord = await findLocation(ref)
-
-            if (!locationRecord) {
-              const { name, x, y, xmin, ymin, xmax, ymax } = location
-
-              locationRecord = await insertLocation(ref, name, x, y, xmin, ymin, xmax, ymax)
-            }
-
-            await insertContactLocation(contact.id, locationRecord.id)
-          }
-        }
       }
 
-      request.cookieAuth.set({ contact })
+      // Insert confirmed address from session (and remove)
+      const address = request.yar.get('confirmed-address', true)
+
+      request.yar.reset()
+
+      if (address) {
+        const { uprn: id, address: name, x, y } = address
+        let locationRecord = await findLocation(id)
+
+        if (!locationRecord) {
+          locationRecord = await insertLocation(id, name, x, y)
+        }
+
+        await insertContactLocation(contact.id, locationRecord.id)
+      }
 
       const next = contact.email_active === null
         ? '/consent-email'

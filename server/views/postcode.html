@@ -2,12 +2,9 @@
 
 {% block beforeForm %}
 <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
+<p>Enter a full postcode. We will check to see if we monitor the location.</p>
 {% endblock %}
 
 {% block form %}
-{{ govukInput(fields.email) }}
-{% endblock %}
-
-{% block afterForm %}
-{% include "partials/floodline.html" %}
+{{ govukInput(fields.postcode) }}
 {% endblock %}

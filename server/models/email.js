@@ -1,16 +1,17 @@
 const joi = require('joi')
 const { BaseViewModel, baseMessages } = require('./form')
 
-const PAGE_HEADING = 'What is your email address?'
+const PAGE_HEADING = 'Manage your warnings'
 const EMAIL_KEY = 'email'
-const EMAIL_LABEL = 'Email'
+const EMAIL_LABEL = 'Email address'
 const EMAIL_MESSAGES = {
   'string.empty': 'Enter an email address',
   'string.email': 'Enter a valid email address'
 }
 
 const schema = joi.object().keys({
-  [EMAIL_KEY]: joi.string().label(EMAIL_LABEL).trim().email().required().messages(EMAIL_MESSAGES)
+  [EMAIL_KEY]: joi.string().label(EMAIL_LABEL).trim()
+    .email().required().messages(EMAIL_MESSAGES)
 }).messages(baseMessages).required()
 
 class ViewModel extends BaseViewModel {
@@ -24,13 +25,11 @@ class ViewModel extends BaseViewModel {
       id: EMAIL_KEY,
       name: EMAIL_KEY,
       label: {
-        text: PAGE_HEADING,
-        classes: 'govuk-label--l',
-        isPageHeading: true
+        text: EMAIL_LABEL
       },
-      hint: {
-        text: 'You will need access to the email, as we will send you a code.'
-      },
+      // hint: {
+      //   text: 'You will need access to the email, as we will send you a code.'
+      // },
       classes: 'govuk-input--width-20',
       type: 'email',
       autocomplete: 'email',

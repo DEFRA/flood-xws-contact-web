@@ -3,3 +3,8 @@
 {% block form %}
 {{ govukInput(fields.token) }}
 {% endblock %}
+
+{% block afterForm %}
+<p>It may take a moment for your code to arrive. If you haven't received your email, please check your spam folder.</p><br>
+<p><a class="govuk-link--no-visited-state" href="/email">Enter a different email address</a></p>
+{% endblock %}

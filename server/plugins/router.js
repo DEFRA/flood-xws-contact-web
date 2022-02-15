@@ -1,8 +1,12 @@
 const routes = [].concat(
   require('../routes/home'),
   require('../routes/email'),
-  require('../routes/mobile'),
+  require('../routes/mob'),
+  // require('../routes/mobile'),
   // require('../routes/landline'),
+  require('../routes/postcode'),
+  require('../routes/search'),
+  require('../routes/address-risk'),
   require('../routes/verify-email'),
   require('../routes/verify-mobile'),
   // require('../routes/verify-landline'),

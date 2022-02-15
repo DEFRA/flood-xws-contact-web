@@ -1,4 +1,4 @@
-const { getContactLocations } = require('../lib/db')
+const { getContactById, getContactLocations } = require('../lib/db')
 const { SEVERITY_ITEMS, SEVERITY_ITEM_LABELS } = require('../models/locations')
 
 const formatYesNo = val => {
@@ -24,7 +24,8 @@ module.exports = [
     path: '/account',
     handler: async (request, h) => {
       const { credentials } = request.auth
-      const { contact } = credentials
+      const { id } = credentials
+      const contact = await getContactById(id)
       const contactLocations = await getContactLocations(contact.id)
 
       const rows = [
@@ -32,8 +33,8 @@ module.exports = [
         ['Flood warning locations', { html: contactLocations.map(cl => cl.name).join('<br><br>') }, '/locations'],
         ['Which flood warnings do you need?', formatReceiveMessages(contact.receive_messages), '/locations'],
         ['Get warnings by email?', formatYesNo(contact.email_active), '/consent-email'],
-        ['Get warnings by text?', formatYesNo(contact.mobile_active), '/consent-mobile'],
-        ['Mobile number', contact.mobile, '/mobile']
+        ['Get warnings by text?', formatYesNo(contact.mobile_active), '/mob'],
+        ['Mobile number', contact.mobile, '/mob']
         // ['Get warnings by telephone call?', formatYesNo(contact.landline_active), '/consent-landline'],
         // ['Phone number', contact.landline, '/landline']
       ].map(item => ({

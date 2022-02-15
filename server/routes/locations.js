@@ -1,35 +1,19 @@
 const { Errors } = require('../models/form')
 const { ViewModel, schema } = require('../models/locations')
-const { getContactLocations, updateContactReceiveMessages } = require('../lib/db')
+const { getContactById, getContactLocations, updateContactReceiveMessages } = require('../lib/db')
 
 module.exports = [
   {
     method: 'GET',
     path: '/locations',
     handler: async (request, h) => {
-      const auth = request.auth
+      const { id } = request.auth.credentials
 
-      let locations, severity
-      if (auth.isAuthenticated) {
-        const { contact } = request.auth.credentials
-        locations = await getContactLocations(contact.id)
-        severity = contact.receive_messages
-      } else {
-        locations = request.yar.get('locations')
-
-        if (!locations) {
-          return h.redirect('/location')
-        }
-
-        severity = request.yar.get('severity')
-      }
+      const contact = await getContactById(id)
+      const locations = await getContactLocations(contact.id)
+      const severity = contact.receive_messages
 
       return h.view('locations', new ViewModel({ severity, locations }))
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
     }
   },
   {
@@ -37,35 +21,23 @@ module.exports = [
     path: '/locations',
     handler: async (request, h) => {
       const { severity } = request.payload
+      const { id } = request.auth.credentials
 
-      const auth = request.auth
+      await updateContactReceiveMessages(id, severity)
 
-      if (auth.isAuthenticated) {
-        let { contact } = request.auth.credentials
-        contact = await updateContactReceiveMessages(contact.id, severity)
-        request.cookieAuth.set({ contact })
-
-        return h.redirect('/account')
-      } else {
-        request.yar.set('severity', severity)
-      }
-
-      return h.redirect('/email')
+      return h.redirect('/account')
     },
     options: {
-      auth: {
-        mode: 'try'
-      },
       validate: {
         payload: schema,
-        failAction: (request, h, err) => {
-          const locations = request.yar.get('locations')
+        failAction: async (request, h, err) => {
+          const { id } = request.auth.credentials
 
-          if (!locations) {
-            return h.redirect('/location')
-          }
+          const contact = await getContactById(id)
+          const locations = await getContactLocations(contact.id)
+          const model = new ViewModel({ locations, ...request.payload }, Errors.fromJoi(err))
 
-          return h.view('locations', new ViewModel({ locations, ...request.payload }, Errors.fromJoi(err))).takeover()
+          return h.view('locations', model).takeover()
         }
       }
     }

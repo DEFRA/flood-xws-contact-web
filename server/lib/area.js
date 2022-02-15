@@ -1,17 +1,17 @@
 const db = require('./db')
 
-// /**
-//  * Find all flood areas that intersect a point
-//  *
-//  * @param {number} x - The x co-ordinate (Easting/longitude)
-//  * @param {number} y - The y co-ordinate (Northing/latitude)
-//  */
-// async function findAreasByPoint (x, y) {
-//   return db.query(`
-//     select *
-//     from xws_area.area a
-//     where st_intersects(st_setsrid(st_makepoint($1, $2), 4326), a.geom);`, [x, y])
-// }
+/**
+ * Find all flood areas that intersect a point
+ *
+ * @param {number} x - The x co-ordinate (Easting/longitude)
+ * @param {number} y - The y co-ordinate (Northing/latitude)
+ */
+async function findAreasByPoint (x, y) {
+  return db.query(`
+    select *
+    from xws_area.area a
+    where st_intersects(st_setsrid(st_makepoint($1, $2), 4326), a.geom);`, [x, y])
+}
 
 // /**
 //  * Find all flood alert areas that intersect a point
@@ -116,7 +116,7 @@ async function areasIntersectBox (xmin, ymin, xmax, ymax) {
 
 module.exports = {
   areasIntersectPoint,
-  // findAreasByPoint,
+  findAreasByPoint,
   // findAlertAreasByPoint,
   // findWarningAreasByPoint,
   areasIntersectBox

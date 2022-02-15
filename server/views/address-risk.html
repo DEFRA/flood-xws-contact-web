@@ -1,0 +1,13 @@
+{% extends "form.html" %}
+
+{% set formSubmitButtonText = "Add address" if isAuthenticated else "Sign in to add address" %}
+
+{% block form %}
+  <h1 class="govuk-heading-l">Flood warnings at: <br> {{ name }}</h1>
+  <p>We monitor the location this address is within.</p>
+  <p>We can offer you warnings:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>when flooding to property or a danger to life is expected</li>
+    <li>when minor flooding is possible including roads, fields and footpaths that may not be near you but may connect to waterways in this location</li>
+  </ul>
+{% endblock %}
