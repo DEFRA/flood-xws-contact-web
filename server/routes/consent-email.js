@@ -9,8 +9,9 @@ module.exports = [
     handler: async (request, h) => {
       const { id } = request.auth.credentials
       const contact = await getContactById(id)
+      const data = { email: contact.email, consent: contact.email_active }
 
-      return h.view('consent-email', new ViewModel({ consent: contact.email_active }))
+      return h.view('consent-email', new ViewModel(data))
     }
   },
   {
@@ -24,20 +25,23 @@ module.exports = [
       // Update contact
       const contact = await updateContactEmailActive(id, consent)
 
-      const next = contact.mobile
-        ? '/account'
-        : '/mob'
+      const next = contact.receive_messages === null
+        ? '/locations'
+        : '/account'
 
       return h.redirect(next)
     },
     options: {
       validate: {
         payload: schema,
-        failAction: (request, h, err) => {
+        failAction: async (request, h, err) => {
           const { payload } = request
           const errors = Errors.fromJoi(err)
+          const { id } = request.auth.credentials
+          const contact = await getContactById(id)
+          const data = { email: contact.email, ...payload }
 
-          return h.view('consent-email', new ViewModel({ ...payload }, errors)).takeover()
+          return h.view('consent-email', new ViewModel(data, errors)).takeover()
         }
       }
     }

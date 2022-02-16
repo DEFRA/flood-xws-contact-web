@@ -47,7 +47,7 @@ class ViewModel extends BaseViewModel {
       items: CONSENT_ITEMS.map((value, index) => ({
         value: value,
         text: CONSENT_ITEM_LABELS[index],
-        checked: value === Boolean(this.data[CONSENT_KEY])
+        checked: value === this.data[CONSENT_KEY]
       })),
       errorMessage: this.errors[CONSENT_KEY]
     })

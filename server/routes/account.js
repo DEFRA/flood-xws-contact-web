@@ -33,19 +33,24 @@ module.exports = [
         ['Flood warning locations', { html: contactLocations.map(cl => cl.name).join('<br><br>') }, '/locations'],
         ['Which flood warnings do you need?', formatReceiveMessages(contact.receive_messages), '/locations'],
         ['Get warnings by email?', formatYesNo(contact.email_active), '/consent-email'],
-        ['Get warnings by text?', formatYesNo(contact.mobile_active), '/mob'],
-        ['Mobile number', contact.mobile, '/mob']
+        ['Get warnings by text?', formatYesNo(contact.mobile_active), '/mob']
         // ['Get warnings by telephone call?', formatYesNo(contact.landline_active), '/consent-landline'],
         // ['Phone number', contact.landline, '/landline']
-      ].map(item => ({
+      ]
+
+      if (contact.mobile_active) {
+        rows.push(['Mobile number', contact.mobile, '/mob'])
+      }
+
+      const map = item => ({
         key: { text: item[0] },
         value: typeof item[1] === 'string' ? { text: item[1] } : item[1],
-        actions: {
-          items: [{ href: item[2], text: 'Change', visuallyHiddenText: item[0] }]
-        }
-      }))
+        actions: item[2]
+          ? { items: [{ href: item[2], text: 'Change', visuallyHiddenText: item[0] }] }
+          : null
+      })
 
-      return h.view('account', { contact, rows })
+      return h.view('account', { contact, rows: rows.map(map) })
     }
   }
 ]

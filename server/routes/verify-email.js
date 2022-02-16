@@ -82,7 +82,10 @@ module.exports = [
         contact = await insertContact(email)
       }
 
-      // Insert confirmed address from session (and remove)
+      // Set sign in cookie
+      request.cookieAuth.set({ id: contact.id })
+
+      // If one exists, insert confirmed address from session
       const address = request.yar.get('confirmed-address', true)
 
       request.yar.reset()

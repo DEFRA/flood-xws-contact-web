@@ -33,13 +33,16 @@ class ViewModel extends BaseViewModel {
           isPageHeading: true
         }
       },
-      classes: 'govuk-radios--inline',
+      hint: {
+        html: `<div class="govuk-inset-text">${this.data.email}</div>`
+      },
+      // classes: 'govuk-radios--inline',
       items: CONSENT_ITEMS.map((value, index) => ({
         value: value,
         text: CONSENT_ITEM_LABELS[index],
         checked: value === this.data[CONSENT_KEY]
       })),
-      errorMessage: this.errors.consent
+      errorMessage: this.errors[CONSENT_KEY]
     })
   }
 }

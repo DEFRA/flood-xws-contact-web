@@ -23,9 +23,13 @@ module.exports = [
       const { severity } = request.payload
       const { id } = request.auth.credentials
 
-      await updateContactReceiveMessages(id, severity)
+      const contact = await updateContactReceiveMessages(id, severity)
 
-      return h.redirect('/account')
+      const next = contact.mobile_active === null
+        ? '/mob'
+        : '/account'
+
+      return h.redirect(next)
     },
     options: {
       validate: {

@@ -8,26 +8,14 @@ module.exports = [
     handler: async (request, h) => {
       const auth = request.auth
       const { id } = request.params
+      const { id: contactId } = auth.credentials
+      const contactLocation = await getContactLocation(contactId, id)
 
-      if (auth.isAuthenticated) {
-        const { contact } = request.auth.credentials
-        const contactLocation = await getContactLocation(contact.id, id)
-
-        if (!contactLocation) {
-          return h.redirect('/locations')
-        }
-
-        return h.view('confirm-remove', new ViewModel(contactLocation))
-      } else {
-        const locations = request.yar.get('locations') || []
-        const location = locations.find(l => l.id === id)
-
-        if (!location) {
-          return h.redirect('/locations')
-        }
-
-        return h.view('confirm-remove', new ViewModel(location))
+      if (!contactLocation) {
+        return h.redirect('/locations')
       }
+
+      return h.view('confirm-remove', new ViewModel(contactLocation))
     },
     options: {
       validate: {
@@ -42,13 +30,8 @@ module.exports = [
       const auth = request.auth
       const { id } = request.params
 
-      if (auth.isAuthenticated) {
-        const { contact } = request.auth.credentials
-        await removeContactLocation(contact.id, id)
-      } else {
-        const locations = request.yar.get('locations')
-        request.yar.set('locations', locations.filter(l => l.id !== id))
-      }
+      const { id: contactId } = auth.credentials
+      await removeContactLocation(contactId, id)
 
       return h.redirect('/locations')
     },
