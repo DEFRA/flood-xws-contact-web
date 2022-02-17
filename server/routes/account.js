@@ -33,13 +33,13 @@ module.exports = [
         ['Flood warning locations', { html: contactLocations.map(cl => cl.name).join('<br><br>') }, '/locations'],
         ['Which flood warnings do you need?', formatReceiveMessages(contact.receive_messages), '/locations'],
         ['Get warnings by email?', formatYesNo(contact.email_active), '/consent-email'],
-        ['Get warnings by text?', formatYesNo(contact.mobile_active), '/mob']
+        ['Get warnings by text?', formatYesNo(contact.mobile_active), '/mobile']
         // ['Get warnings by telephone call?', formatYesNo(contact.landline_active), '/consent-landline'],
         // ['Phone number', contact.landline, '/landline']
       ]
 
       if (contact.mobile_active) {
-        rows.push(['Mobile number', contact.mobile, '/mob'])
+        rows.push(['Mobile number', contact.mobile, '/mobile'])
       }
 
       const map = item => ({

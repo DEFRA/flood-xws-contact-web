@@ -33,7 +33,7 @@ module.exports = [
       const attemptsRemaining = mobileState?.attemptsRemaining
 
       if (!mobileState || !attemptsRemaining) {
-        return h.redirect('/mob')
+        return h.redirect('/mobile')
       }
 
       const { payload } = request

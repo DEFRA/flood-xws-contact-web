@@ -26,7 +26,7 @@ module.exports = [
       const contact = await updateContactReceiveMessages(id, severity)
 
       const next = contact.mobile_active === null
-        ? '/mob'
+        ? '/mobile'
         : '/account'
 
       return h.redirect(next)
