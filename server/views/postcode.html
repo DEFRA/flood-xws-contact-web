@@ -1,10 +1,10 @@
 {% extends "form.html" %}
 
 {% block beforeForm %}
-<h1 class="govuk-heading-l">{{ pageHeading }}</h1>
-<p>Enter a full postcode. We will check to see if we monitor the location.</p>
+  <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
+  <p>Enter a full postcode. We will check to see if we monitor the location.</p>
 {% endblock %}
 
 {% block form %}
-{{ govukInput(fields.postcode) }}
+  {{ govukInput(fields.postcode) }}
 {% endblock %}

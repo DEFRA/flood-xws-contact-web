@@ -1,11 +1,11 @@
 {% extends "form.html" %}
 
 {% block form %}
-{% set mobileHtml %}
-  {{ govukInput(fields.mobile) }}
-{% endset -%}
+  {% set mobileHtml %}
+    {{ govukInput(fields.mobile) }}
+  {% endset -%}
 
-{{ setConditional(fields.consent, 0, mobileHtml) }}
+  {{ setConditional(fields.consent, 0, mobileHtml) }}
 
-{{ govukRadios(fields.consent) }}
+  {{ govukRadios(fields.consent) }}
 {% endblock %}
