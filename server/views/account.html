@@ -3,11 +3,17 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% block twoThirds %}
-<h1 class="govuk-heading-l">Check your answers</h1>
+<h1 class="govuk-heading-l">Your answers</h1>
 
 {{ govukSummaryList({
   classes: 'govuk-!-margin-bottom-9',
   rows: rows
+}) }}
+
+{{ govukButton({
+  text: "Sign out",
+  href: "/signout",
+  classes: "govuk-button--secondary"
 }) }}
 
 {% endblock %}
