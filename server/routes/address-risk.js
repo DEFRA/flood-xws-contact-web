@@ -21,12 +21,12 @@ module.exports = [
 
       const result = await findAreasByPoint(x, y)
 
-      if (!result.length) {
-        return h.view('address-no-risk', { name })
-      }
-
       const { auth } = request
       const { isAuthenticated } = auth
+
+      if (!result.length) {
+        return h.view('address-no-risk', { name, isAuthenticated })
+      }
 
       return h.view('address-risk', { name, isAuthenticated })
     },

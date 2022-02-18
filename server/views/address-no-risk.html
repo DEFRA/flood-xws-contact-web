@@ -13,4 +13,12 @@
     text: "Try another address",
     href: "/postcode"
   }) }}
+
+  {% if isAuthenticated %}
+    {{ govukButton({
+      text: "Flood warning locations",
+      href: "/locations",
+      classes: "govuk-button--secondary"
+    }) }}
+  {% endif %}
 {% endblock %}
