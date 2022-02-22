@@ -8,6 +8,7 @@ const schema = joi.object().keys({
   port: joi.number().required(),
   databaseUrl: joi.string().required(),
   databaseSsl: joi.boolean().required(),
+  areaApiUrl: joi.string().uri().required(),
   cookie: joi.object().keys({
     password: joi.string().min(32).required(),
     isSecure: joi.boolean().required()
@@ -44,6 +45,7 @@ const config = {
   port: process.env.PORT,
   databaseUrl: process.env.DATABASE_URL,
   databaseSsl: process.env.DATABASE_SSL || false,
+  areaApiUrl: process.env.AREA_API_URL,
   phaseBannerTag: process.env.PHASE_BANNER_TAG,
   phaseBannerHtml: process.env.PHASE_BANNER_HTML,
   cookie: {

@@ -1,5 +1,6 @@
 const db = require('./db')
-
+const config = require('../config')
+const { getJson } = require('./http')
 /**
  * Find all flood areas that intersect a point
  *
@@ -7,10 +8,11 @@ const db = require('./db')
  * @param {number} y - The y co-ordinate (Northing/latitude)
  */
 async function findAreasByPoint (x, y) {
-  return db.query(`
-    select *
-    from xws_area.area a
-    where st_intersects(st_setsrid(st_makepoint($1, $2), 4326), a.geom);`, [x, y])
+  return getJson(`${config.areaApiUrl}/area?x=${x}&y=${y}`)
+  // return db.query(`
+  //   select *
+  //   from xws_area.area a
+  //   where st_intersects(st_setsrid(st_makepoint($1, $2), 4326), a.geom);`, [x, y])
 }
 
 // /**

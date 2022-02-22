@@ -18,7 +18,9 @@
     {% endfor %}
   </dl>
   <p>
-    <a class="govuk-link--no-visited-state" href="/postcode">Add another location</a>
+    <a class="govuk-link--no-visited-state" href="/postcode">
+      {{ "Add location" if data.locations.length < 1 else "Add another location" }}
+    </a>
   </p>
 {% endblock %}
 
@@ -26,7 +28,6 @@
   <hr class="govuk-section-break govuk-section-break--xl">
   {{ govukRadios(fields.severity) }}
 {% endblock %}
-
 
 {% block afterForm %}
   {# <pre>{{ data | dump(2) }}</pre> #}
