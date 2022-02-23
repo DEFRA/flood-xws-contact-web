@@ -46,7 +46,7 @@ async function findLocation (ref) {
  */
 async function insertContact (email) {
   return queryOne(`
-    insert into xws_contact.contact(email, state, hazard, type)
+    insert into xws_contact.contact(email, state, hazard, type_name)
     values($1, $2, $3, $4)
     returning *
   `, [email, 'active', 'flood', 'public'])
