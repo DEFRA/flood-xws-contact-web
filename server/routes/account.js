@@ -1,3 +1,4 @@
+const { saveSubscriptions } = require('../lib/subscription')
 const { getContactById, getContactLocations } = require('../lib/db')
 const { SEVERITY_ITEMS, SEVERITY_ITEM_LABELS } = require('../models/locations')
 
@@ -51,6 +52,19 @@ module.exports = [
       })
 
       return h.view('account', { contact, rows: rows.map(map) })
+    }
+  },
+  {
+    method: 'POST',
+    path: '/account',
+    handler: async (request, h) => {
+      const { credentials } = request.auth
+      const { id } = credentials
+
+      // Send subscription to DDB
+      await saveSubscriptions(id)
+
+      return h.redirect('/confirmation')
     }
   }
 ]

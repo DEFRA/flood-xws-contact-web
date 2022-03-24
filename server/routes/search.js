@@ -1,3 +1,4 @@
+const { point } = require('../lib/proj')
 const { findByPostcode } = require('../lib/location')
 const { Errors } = require('../models/form')
 const { ViewModel, schema, querySchema } = require('../models/search')
@@ -30,6 +31,12 @@ module.exports = [
       const { address } = request.payload
       const addresses = request.yar.get('addresses')
       const addr = addresses[address]
+
+      // Convert point to 4326
+      const [x, y] = point(addr.x, addr.y)
+      addr.x = x
+      addr.y = y
+
       request.yar.set('address', addr)
 
       return h.redirect('/address-risk')

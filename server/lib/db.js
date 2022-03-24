@@ -40,6 +40,15 @@ async function findLocation (ref) {
 }
 
 /**
+ * Get a single location by id
+ *
+ * @param {string} ref - The URPN or OSGB ref
+ */
+async function getLocation (id) {
+  return queryOne('select *, st_asgeojson(centroid) as centroid_geo from xws_contact.location where id = $1', [id])
+}
+
+/**
  * Insert a single contact
  *
  * @param {string} email - The email address
@@ -224,6 +233,7 @@ module.exports = {
   pool,
   query,
   queryOne,
+  getLocation,
   findContact,
   getContactById,
   findLocation,

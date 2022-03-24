@@ -9,6 +9,7 @@ const schema = joi.object().keys({
   databaseUrl: joi.string().required(),
   databaseSsl: joi.boolean().required(),
   areaApiUrl: joi.string().uri().required(),
+  subscriptionTableName: joi.string().required(),
   cookie: joi.object().keys({
     password: joi.string().min(32).required(),
     isSecure: joi.boolean().required()
@@ -46,6 +47,7 @@ const config = {
   databaseUrl: process.env.DATABASE_URL,
   databaseSsl: process.env.DATABASE_SSL || false,
   areaApiUrl: process.env.AREA_API_URL,
+  subscriptionTableName: process.env.SUBSCRIPTION_TABLE_NAME,
   phaseBannerTag: process.env.PHASE_BANNER_TAG,
   phaseBannerHtml: process.env.PHASE_BANNER_HTML,
   cookie: {

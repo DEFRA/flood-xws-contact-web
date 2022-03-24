@@ -18,6 +18,7 @@ const routes = [].concat(
   require('../routes/confirm-remove'),
   require('../routes/england-only'),
   require('../routes/account'),
+  require('../routes/confirmation'),
   require('../routes/status'),
   require('../routes/public'),
   require('../routes/signout')

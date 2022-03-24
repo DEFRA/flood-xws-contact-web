@@ -1,6 +1,5 @@
 const { findLocation, insertLocation, insertContactLocation } = require('../lib/db')
 const { findAreasByPoint } = require('../lib/area')
-const { point } = require('../lib/proj')
 const { Errors } = require('../models/form')
 const { ViewModel } = require('../models/search')
 
@@ -15,9 +14,7 @@ module.exports = [
         return h.redirect('/postcode')
       }
 
-      const { address: name } = address
-
-      const [x, y] = point(address.x, address.y)
+      const { address: name, x, y } = address
 
       const result = await findAreasByPoint(x, y)
 
@@ -61,7 +58,7 @@ module.exports = [
 
         return h.redirect('/locations')
       } else {
-        // Clear session
+        // Set confirmed address to session
         request.yar.set('confirmed-address', address)
 
         return h.redirect('/email')

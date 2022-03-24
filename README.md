@@ -11,6 +11,8 @@ Public facing "Get flood warnings" registration website
 | PORT                         | Port number                    | yes        |                               |
 | DATABASE_URL                 | PG Database Url                | yes        |                               |
 | DATABASE_SSL                 | PG Database SSL flag           | no         | true/false                    |
+| AREA_API_URL                 | Area API URL                   | yes        |                               |
+| SUBSCRIPTION_TABLE_NAME      | Dynamo subscription table name | yes        |                               |
 | COOKIE_PASSWORD              |                                | yes        |                               |
 | COOKIE_IS_SECURE             |                                | yes        |                               |
 | HTTP_TIMEOUT_MS              |                                | yes        |                               |

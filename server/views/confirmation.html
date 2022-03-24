@@ -1,0 +1,10 @@
+{% extends "two-thirds.html" %}
+
+{% block twoThirds %}
+  {{ govukPanel({
+    titleText: "Complete",
+    html: "Your locations have been saved"
+  }) }}
+
+  {% include "partials/floodline.html" %}
+{% endblock %}
