@@ -1,6 +1,6 @@
 const { Errors } = require('../models/form')
 const { ViewModel, schema } = require('../models/locations')
-const { getContactById, getContactLocations, updateContactReceiveMessages } = require('../lib/db')
+const { getContactById, getContactLocations, updateContact } = require('../lib/db')
 
 module.exports = [
   {
@@ -23,11 +23,13 @@ module.exports = [
       const { severity } = request.payload
       const { id } = request.auth.credentials
 
-      const contact = await updateContactReceiveMessages(id, severity)
+      const contact = await updateContact(id, {
+        receive_messages: severity
+      })
 
-      const next = contact.mobile_active === null
-        ? '/mobile'
-        : '/account'
+      const next = 'mobile_active' in contact
+        ? '/account'
+        : '/mobile'
 
       return h.redirect(next)
     },

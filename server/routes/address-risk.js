@@ -1,4 +1,4 @@
-const { findLocation, insertLocation, insertContactLocation } = require('../lib/db')
+const { insertContactLocation } = require('../lib/db')
 const { findAreasByPoint } = require('../lib/area')
 const { Errors } = require('../models/form')
 const { ViewModel } = require('../models/search')
@@ -47,14 +47,8 @@ module.exports = [
 
       if (isAuthenticated) {
         const { id } = auth.credentials
-        const { uprn: ref, address: name, x, y } = address
-        let location = await findLocation(ref)
 
-        if (!location) {
-          location = await insertLocation(ref, name, x, y)
-        }
-
-        await insertContactLocation(id, location.id)
+        await insertContactLocation(id, address.uprn, address)
 
         return h.redirect('/locations')
       } else {

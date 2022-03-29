@@ -1,6 +1,6 @@
 const { Errors } = require('../models/form')
 const { ViewModel, schema } = require('../models/consent-email')
-const { getContactById, updateContactEmailActive } = require('../lib/db')
+const { getContactById, updateContact } = require('../lib/db')
 
 module.exports = [
   {
@@ -23,11 +23,13 @@ module.exports = [
       const consent = request.payload.consent
 
       // Update contact
-      const contact = await updateContactEmailActive(id, consent)
+      const contact = await updateContact(id, {
+        email_active: consent
+      })
 
-      const next = contact.receive_messages === null
-        ? '/locations'
-        : '/account'
+      const next = 'receive_messages' in contact
+        ? '/account'
+        : '/locations'
 
       return h.redirect(next)
     },

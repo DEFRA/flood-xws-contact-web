@@ -2,7 +2,7 @@ const config = require('../config')
 const { Errors } = require('../models/form')
 const { ViewModel, schema, customErrors } = require('../models/verify-email')
 const { verifyTOTP } = require('../lib/otp')
-const { findLocation, insertLocation, findContact, insertContact, insertContactLocation } = require('../lib/db')
+const { updateContact, insertContactLocation } = require('../lib/db')
 
 module.exports = [
   {
@@ -76,14 +76,19 @@ module.exports = [
 
       // Insert/select contact
       // TODO (ds): transaction
-      let contact = await findContact(email)
+      // let contact = await findContact(email)
 
-      if (!contact) {
-        contact = await insertContact(email)
-      }
+      // if (!contact) {
+      //   contact = await insertContact(email)
+      // }
+
+      const contact = await updateContact(email, {
+        email,
+        last_logged_in: Date.now()
+      })
 
       // Set sign in cookie
-      request.cookieAuth.set({ id: contact.id })
+      request.cookieAuth.set({ id: email })
 
       // If one exists, insert confirmed address from session
       const address = request.yar.get('confirmed-address', true)
@@ -91,19 +96,12 @@ module.exports = [
       request.yar.reset()
 
       if (address) {
-        const { uprn: id, address: name, x, y } = address
-        let locationRecord = await findLocation(id)
-
-        if (!locationRecord) {
-          locationRecord = await insertLocation(id, name, x, y)
-        }
-
-        await insertContactLocation(contact.id, locationRecord.id)
+        await insertContactLocation(contact.id, address.uprn, address)
       }
 
-      const next = contact.email_active === null
-        ? '/consent-email'
-        : '/account'
+      const next = 'email_active' in contact
+        ? '/account'
+        : '/consent-email'
 
       return h.redirect(next)
     },

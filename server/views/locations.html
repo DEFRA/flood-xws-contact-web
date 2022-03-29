@@ -6,11 +6,11 @@
     {% for location in data.locations %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__value">
-          {{ location.name }}
+          {{ location.address }}
         </dt>
         <dd class="govuk-summary-list__actions">
           <a class="govuk-link govuk-link--no-visited-state"
-            href="/confirm-remove/{{ location.id }}">
+            href="/confirm-remove/{{ encrypt(location.id) }}">
             Remove<span class="govuk-visually-hidden"> address</span>
           </a>
         </dd>

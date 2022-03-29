@@ -4,7 +4,7 @@ const { Errors } = require('../models/form')
 const { generateTOTP } = require('../lib/otp')
 const { sendSMSToken } = require('../lib/phone-number')
 const { ViewModel, schema, customErrors } = require('../models/mobile')
-const { updateContactMobileActive, updateContactMobile, getContactById } = require('../lib/db')
+const { getContactById, updateContact } = require('../lib/db')
 
 module.exports = [
   {
@@ -28,8 +28,10 @@ module.exports = [
 
       if (!consent) {
         // Update contact - clear mobile consent and number
-        await updateContactMobileActive(id, false)
-        await updateContactMobile(id, null)
+        await updateContact(id, {
+          mobile_active: false,
+          mobile: null
+        })
 
         return h.redirect('/account')
       } else {

@@ -1,7 +1,9 @@
 const path = require('path')
 const nunjucks = require('nunjucks')
+const { markSafe } = require('nunjucks/src/runtime')
 const config = require('../config')
 const pkg = require('../../package.json')
+const { encrypt } = require('../lib/crtpy')
 const analyticsAccount = config.analyticsAccount
 
 module.exports = {
@@ -17,13 +19,16 @@ module.exports = {
           }
         },
         prepare: (options, next) => {
-          options.compileOptions.environment = nunjucks.configure([
+          const env = options.compileOptions.environment = nunjucks.configure([
             path.join(options.relativeTo || process.cwd(), options.path),
             'node_modules/govuk-frontend/'
           ], {
             autoescape: true,
             watch: false
           })
+
+          // Register globals/filters
+          env.addGlobal('encrypt', markSafe(encrypt))
 
           return next()
         }

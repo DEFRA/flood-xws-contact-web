@@ -3,7 +3,7 @@
 {% block beforeForm %}
   <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
   {{ govukWarningText({
-    text: "You will no longer receive flood warning information for " + data.name,
+    text: "You will no longer receive flood warning information for " + data.address,
     iconFallbackText: "Warning"
   }) }}
 {% endblock %}

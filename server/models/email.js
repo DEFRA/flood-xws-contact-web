@@ -10,7 +10,7 @@ const EMAIL_MESSAGES = {
 }
 
 const schema = joi.object().keys({
-  [EMAIL_KEY]: joi.string().label(EMAIL_LABEL).trim()
+  [EMAIL_KEY]: joi.string().label(EMAIL_LABEL).trim().lowercase()
     .email().required().messages(EMAIL_MESSAGES)
 }).messages(baseMessages).required()
 

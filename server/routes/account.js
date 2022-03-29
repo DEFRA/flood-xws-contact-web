@@ -31,7 +31,7 @@ module.exports = [
 
       const rows = [
         ['Email address', contact.email],
-        ['Flood warning locations', { html: contactLocations.map(cl => cl.name).join('<br><br>') }, '/locations'],
+        ['Flood warning locations', { html: contactLocations.map(cl => cl.address).join('<br><br>') }, '/locations'],
         ['Which flood warnings do you need?', formatReceiveMessages(contact.receive_messages), '/locations'],
         ['Get warnings by email?', formatYesNo(contact.email_active), '/consent-email'],
         ['Get warnings by text?', formatYesNo(contact.mobile_active), '/mobile']

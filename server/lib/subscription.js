@@ -1,17 +1,16 @@
-
 const AWS = require('aws-sdk')
 const config = require('../config')
 const { findAreasByPoint } = require('./area')
-const { getContactById, getContactLocations, getLocation } = require('./db')
+const { getContactById, getContactLocations } = require('./db')
 const ddb = new AWS.DynamoDB.DocumentClient()
-const tableName = config.subscriptionTableName
+const { subscriptionTableName } = config
 
 async function saveSubscriptions (contactId) {
   const contact = await getContactById(contactId)
   const contactLocations = await getContactLocations(contact.id)
 
   const contactSubscriptions = (await ddb.query({
-    TableName: tableName,
+    TableName: subscriptionTableName,
     IndexName: 'user-index',
     KeyConditionExpression: 'user_id = :user_id',
     ExpressionAttributeValues: {
@@ -22,7 +21,7 @@ async function saveSubscriptions (contactId) {
   // Delete all current subscriptions
   if (Array.isArray(contactSubscriptions) && contactSubscriptions.length) {
     const req = {
-      [tableName]: contactSubscriptions.map(sub => ({
+      [subscriptionTableName]: contactSubscriptions.map(sub => ({
         DeleteRequest: {
           Key: {
             code: sub.code,
@@ -41,9 +40,7 @@ async function saveSubscriptions (contactId) {
 
   for (let i = 0; i < contactLocations.length; i++) {
     const contactLocation = contactLocations[i]
-    const location = await getLocation(contactLocation.location_id)
-    const centroid = JSON.parse(location.centroid_geo)
-    const areas = await findAreasByPoint(centroid.coordinates[0], centroid.coordinates[1])
+    const areas = await findAreasByPoint(contactLocation.x, contactLocation.y)
 
     for (let j = 0; j < areas.length; j++) {
       const area = areas[j]
@@ -52,7 +49,7 @@ async function saveSubscriptions (contactId) {
         // Email
         if (contact.email && contact.email_active) {
           await ddb.put({
-            TableName: tableName,
+            TableName: subscriptionTableName,
             Item: {
               code: area.code,
               endpoint: contact.email,
@@ -65,7 +62,7 @@ async function saveSubscriptions (contactId) {
         // SMS
         if (contact.mobile && contact.mobile_active) {
           await ddb.put({
-            TableName: tableName,
+            TableName: subscriptionTableName,
             Item: {
               code: area.code,
               endpoint: contact.mobile,
@@ -77,7 +74,7 @@ async function saveSubscriptions (contactId) {
       }
     }
 
-    console.log(areas, location, centroid)
+    console.log(areas)
   }
 }
 

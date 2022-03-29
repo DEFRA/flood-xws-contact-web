@@ -1,4 +1,5 @@
 const { ViewModel, paramsSchema } = require('../models/confirm-remove')
+const { decrypt } = require('../lib/crtpy')
 const { getContactLocation, removeContactLocation } = require('../lib/db')
 
 module.exports = [
@@ -7,7 +8,7 @@ module.exports = [
     path: '/confirm-remove/{id}',
     handler: async (request, h) => {
       const auth = request.auth
-      const { id } = request.params
+      const id = decrypt(request.params.id)
       const { id: contactId } = auth.credentials
       const contactLocation = await getContactLocation(contactId, id)
 
@@ -28,7 +29,7 @@ module.exports = [
     path: '/confirm-remove/{id}',
     handler: async (request, h) => {
       const auth = request.auth
-      const { id } = request.params
+      const id = decrypt(request.params.id)
 
       const { id: contactId } = auth.credentials
       await removeContactLocation(contactId, id)

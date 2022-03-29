@@ -2,7 +2,7 @@ const config = require('../config')
 const { Errors } = require('../models/form')
 const { ViewModel, schema, customErrors } = require('../models/verify-mobile')
 const { verifyTOTP } = require('../lib/otp')
-const { updateContactMobileActive, updateContactMobile } = require('../lib/db')
+const { updateContact } = require('../lib/db')
 
 module.exports = [
   {
@@ -73,8 +73,10 @@ module.exports = [
       const { id } = auth.credentials
 
       // Update contact
-      await updateContactMobileActive(id, true)
-      await updateContactMobile(id, mobile)
+      await updateContact(id, {
+        mobile_active: true,
+        mobile
+      })
 
       const next = '/account'
 
