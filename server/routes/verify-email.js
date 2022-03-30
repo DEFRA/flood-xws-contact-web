@@ -84,7 +84,7 @@ module.exports = [
 
       const contact = await updateContact(email, {
         email,
-        last_logged_in: Date.now()
+        last_signed_in: Date.now()
       })
 
       // Set sign in cookie

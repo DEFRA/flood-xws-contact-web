@@ -10,6 +10,7 @@ async function findByPostcode (postcode) {
   params.append('dataset', 'DPA')
   params.append('key', osApi.key)
   params.append('postcode', postcode)
+  params.append('output_srs', 'EPSG:4326')
 
   const payload = await http.getJson(url.href, true)
 
@@ -25,8 +26,8 @@ async function findByPostcode (postcode) {
         uprn: item.UPRN,
         postcode: item.POSTCODE,
         address: item.ADDRESS,
-        x: item.X_COORDINATE,
-        y: item.Y_COORDINATE
+        x: item.LNG,
+        y: item.LAT
       }
     })
 }

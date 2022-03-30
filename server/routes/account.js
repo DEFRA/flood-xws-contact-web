@@ -1,5 +1,5 @@
-const { saveSubscriptions } = require('../lib/subscription')
-const { getContactById, getContactLocations } = require('../lib/db')
+// const { saveSubscriptions } = require('../lib/subscription')
+const { getContactById, getContactLocations, updateContact } = require('../lib/db')
 const { SEVERITY_ITEMS, SEVERITY_ITEM_LABELS } = require('../models/locations')
 
 const formatYesNo = val => {
@@ -61,8 +61,12 @@ module.exports = [
       const { credentials } = request.auth
       const { id } = credentials
 
+      await updateContact(id, {
+        last_confirmed: Date.now()
+      })
+
       // Send subscription to DDB
-      await saveSubscriptions(id)
+      // await saveSubscriptions(id)
 
       return h.redirect('/confirmation')
     }
