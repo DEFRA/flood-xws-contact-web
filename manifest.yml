@@ -5,6 +5,3 @@ applications:
   memory: 256M
   buildpacks:
   - nodejs_buildpack
-  services:
-  - xws-contact-db
-  
