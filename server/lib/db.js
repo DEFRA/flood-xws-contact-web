@@ -17,9 +17,11 @@ function formatLocation (location) {
 }
 
 /**
- * Update a record
+ * Update a ddb record
  *
- * @param {string} id - The id
+ * @param {string} pk - The partition key
+ * @param {string} sk - The sort key
+ * @param {object} data - The patch data
  */
 async function update (pk, sk, data) {
   const attrs = Object.keys(data)
